@@ -1,8 +1,11 @@
 import { motion } from "motion/react";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/base/buttons/button";
 
 export function Splash() {
+    const navigate = useNavigate();
+
     return (
         <div className="flex min-h-dvh flex-col bg-brand-600">
             {/* Logo section - centered in the upper area */}
@@ -30,7 +33,12 @@ export function Splash() {
             {/* Bottom card with buttons */}
             <div className="rounded-t-3xl border-t border-[#E4D5B2] bg-white px-4 pb-8 pt-6">
                 <div className="flex flex-col gap-3">
-                    <Button color="primary" size="xl" className="w-full">
+                    <Button
+                        color="primary"
+                        size="xl"
+                        className="w-full"
+                        onClick={() => navigate("/signup")}
+                    >
                         Crear mi cuenta
                     </Button>
                     <Button color="secondary" size="xl" className="w-full">

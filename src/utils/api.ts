@@ -1,4 +1,4 @@
-import { getToken } from "@/utils/auth";
+import { clearToken, getToken } from "@/utils/auth";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -70,5 +70,24 @@ export async function api<T>(
         // Response wasn't JSON
     }
 
+    // If 401 and we had a token, it's expired — clear and redirect to splash
+    if (res.status === 401 && getToken()) {
+        clearToken();
+        window.location.href = "/";
+    }
+
     throw new ApiError(res.status, fieldErrors);
+}
+
+/** Check if a stored token is still valid by hitting /api/auth/user/ */
+export async function validateToken(): Promise<boolean> {
+    const token = getToken();
+    if (!token) return false;
+
+    try {
+        await api("/api/auth/user/");
+        return true;
+    } catch {
+        return false;
+    }
 }

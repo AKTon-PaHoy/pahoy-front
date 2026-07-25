@@ -25,8 +25,8 @@ export const HomeScreen = () => {
     useEffect(() => {
         const fetchGigs = async () => {
             try {
-                const results = await api<Gig[]>("/api/gigs/search/");
-                setGigs(results);
+                const response = await api<{ results: Gig[] }>("/api/gigs/search/");
+                setGigs(response.results);
             } catch {
                 setGigs([]);
             } finally {
@@ -78,7 +78,10 @@ export const HomeScreen = () => {
                     <h2 className="text-lg font-bold text-primary">
                         Cerca de ti
                     </h2>
-                    <button className="text-sm font-semibold text-brand-600">
+                    <button
+                        onClick={() => navigate("/search?q=")}
+                        className="text-sm font-semibold text-brand-600"
+                    >
                         Ver todo
                     </button>
                 </div>
@@ -102,7 +105,7 @@ export const HomeScreen = () => {
                 {/* Service cards */}
                 {!isLoading && gigs.length > 0 && (
                     <div className="mt-4 flex flex-col gap-3">
-                        {gigs.map((gig) => (
+                        {gigs.slice(0, 5).map((gig) => (
                             <ServiceCard
                                 key={gig.id}
                                 name={gig.name}

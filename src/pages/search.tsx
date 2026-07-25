@@ -28,21 +28,22 @@ export function Search() {
     const [hasSearched, setHasSearched] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const manualSearchRef = useRef(false);
 
     const performSearch = useCallback(
         async (searchText: string) => {
-            if (!searchText.trim()) return;
-
             setIsLoading(true);
             setHasSearched(true);
 
             try {
-                const gigs = await api<Gig[]>(
-                    `/api/gigs/search/?search=${encodeURIComponent(searchText.trim())}`,
+                const params = searchText.trim()
+                    ? `?search=${encodeURIComponent(searchText.trim())}`
+                    : "";
+                const response = await api<{ results: Gig[] }>(
+                    `/api/gigs/search/${params}`,
                 );
-                setResults(gigs);
+                setResults(response.results);
             } catch {
-                // If API fails, show empty results
                 setResults([]);
             } finally {
                 setIsLoading(false);
@@ -51,9 +52,9 @@ export function Search() {
         [],
     );
 
-    // Search on mount if query param exists
+    // Search on mount if query param exists (including empty string from "Ver todo")
     useEffect(() => {
-        if (initialQuery) {
+        if (searchParams.has("q")) {
             performSearch(initialQuery);
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -69,6 +70,11 @@ export function Search() {
     useEffect(() => {
         if (debounceRef.current) {
             clearTimeout(debounceRef.current);
+        }
+
+        // Skip auto-search if the last action was a manual submit
+        if (manualSearchRef.current) {
+            return;
         }
 
         if (query.trim() && query !== initialQuery) {
@@ -87,7 +93,10 @@ export function Search() {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        if (!query.trim()) return;
+        manualSearchRef.current = true;
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
         setSearchParams({ q: query.trim() });
         performSearch(query);
     };
@@ -115,7 +124,10 @@ export function Search() {
                             ref={inputRef}
                             type="text"
                             value={query}
-                            onChange={(e) => setQuery(e.target.value)}
+                            onChange={(e) => {
+                                manualSearchRef.current = false;
+                                setQuery(e.target.value);
+                            }}
                             placeholder="¿Qué necesitas pa' hoy?"
                             className="w-full bg-transparent text-sm text-primary outline-none placeholder:text-neutral-400"
                         />

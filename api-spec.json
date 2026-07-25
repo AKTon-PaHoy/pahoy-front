@@ -140,6 +140,12 @@
             "type": "string",
             "nullable": true
           },
+          "document_id": {
+            "type": "string",
+            "maxLength": 25,
+            "nullable": true,
+            "description": "Optional identity document identifier."
+          },
           "profile_pic": {
             "type": "string",
             "format": "uri",
@@ -160,6 +166,11 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "onboarding_complete": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether onboarding is complete. When true, first_name, last_name, birth_date, and document_id must remain filled."
           }
         },
         "required": [
@@ -167,7 +178,8 @@
           "user",
           "created_at",
           "updated_at",
-          "kyc_verified"
+          "kyc_verified",
+          "onboarding_complete"
         ]
       },
       "TalentProfile": {
@@ -1257,7 +1269,7 @@
         "tags": [
           "Authentication"
         ],
-        "summary": "Register a user",
+        "summary": "Register a user and issue an authentication token",
         "requestBody": {
           "required": true,
           "content": {
@@ -1295,11 +1307,11 @@
         },
         "responses": {
           "201": {
-            "description": "Successful response",
+            "description": "Successful response with user data and authentication token",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/TokenResponse"
                 }
               }
             }
@@ -2037,6 +2049,17 @@
                   "phone_number": {
                     "type": "string",
                     "maxLength": 15
+                  },
+                  "document_id": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "nullable": true,
+                    "description": "Optional identity document identifier."
+                  },
+                  "onboarding_complete": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Set true only when first_name, last_name, birth_date, and document_id are filled. These fields remain required after completion."
                   },
                   "profile_pic": {
                     "type": "string",

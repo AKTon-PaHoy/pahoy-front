@@ -1,0 +1,3858 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PaHoy API",
+    "version": "1.1.0",
+    "description": "API contract generated from the currently routed Django REST Framework endpoints. The URL configuration, views, serializers, and models are the source of truth. Blog, KYC, knowledge, support, billing, and payment models exist or are planned, but no public API routes for them are currently exposed."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.pahoy.com",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Profiles"
+    },
+    {
+      "name": "Skills"
+    },
+    {
+      "name": "Gigs"
+    },
+    {
+      "name": "Contracts"
+    },
+    {
+      "name": "Reviews"
+    },
+    {
+      "name": "Talents"
+    },
+    {
+      "name": "Chat"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "SessionAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "sessionid"
+      },
+      "TokenAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Use the value `Token <token>`."
+      }
+    },
+    "schemas": {
+      "GeoPoint": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Point"
+            ]
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string",
+            "maxLength": 150
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "location": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "is_staff": {
+            "type": "boolean"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "location",
+          "is_staff",
+          "is_active",
+          "created_at"
+        ]
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "profile_pic": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kyc_verified": {
+            "type": "boolean"
+          },
+          "kyc_verified_date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "user",
+          "created_at",
+          "updated_at",
+          "kyc_verified"
+        ]
+      },
+      "TalentProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profile": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "profile"
+        ]
+      },
+      "ClientProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profile": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "profile"
+        ]
+      },
+      "Skill": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "talent": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "proficiency": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "years": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              3,
+              5,
+              7
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "talent",
+          "name",
+          "description",
+          "proficiency",
+          "years"
+        ]
+      },
+      "SkillDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "talent": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "talent_name": {
+            "type": "string"
+          },
+          "talent_email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "proficiency": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "years": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              3,
+              5,
+              7
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "talent",
+          "talent_name",
+          "talent_email",
+          "name",
+          "description",
+          "proficiency",
+          "years"
+        ]
+      },
+      "Gig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "talent": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "images_uris": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "tags": {
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "talent",
+          "name",
+          "description",
+          "price",
+          "is_active",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "GigList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "talent": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "talent",
+          "name",
+          "description",
+          "price",
+          "is_active",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "Contract": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "gig": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client": {
+            "allOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Activo",
+              "Concluido",
+              "Confirmado",
+              "Disputa",
+              "Cancelado",
+              "Propuesta"
+            ]
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "gig",
+          "status",
+          "price_type",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contract": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client_review": {
+            "type": "string"
+          },
+          "client_satisfaction": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "nullable": true
+          },
+          "talent_review": {
+            "type": "string"
+          },
+          "talent_satisfaction": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "contract",
+          "client_review",
+          "client_satisfaction",
+          "talent_review",
+          "talent_satisfaction"
+        ]
+      },
+      "ReviewList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contract_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "gig_name": {
+            "type": "string"
+          },
+          "client_name": {
+            "type": "string"
+          },
+          "talent_name": {
+            "type": "string"
+          },
+          "client_review": {
+            "type": "string"
+          },
+          "client_satisfaction": {
+            "type": "integer",
+            "nullable": true
+          },
+          "talent_review": {
+            "type": "string"
+          },
+          "talent_satisfaction": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "contract_id",
+          "gig_name",
+          "client_name",
+          "talent_name"
+        ]
+      },
+      "ChatRoom": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "participant_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "last_message": {
+            "nullable": true
+          },
+          "contract": {
+            "allOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              }
+            ],
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "participants",
+          "participant_names",
+          "last_message",
+          "contract",
+          "is_active",
+          "created_at"
+        ]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "room": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sender": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sender_username": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "attachment": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "room",
+          "sender",
+          "sender_username",
+          "content",
+          "timestamp"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ]
+      },
+      "ValidationError": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "token",
+          "user"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/register/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "maxLength": 150
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8
+                  },
+                  "password_confirm": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "username",
+                  "email",
+                  "password",
+                  "password_confirm"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Log in and create a session",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Log out of the session and optionally delete the bearer token",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/auth/user/": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get the authenticated user",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/change-email/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Change the authenticated user email",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  },
+                  "new_email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "new_email_confirm": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "password",
+                  "new_email",
+                  "new_email_confirm"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/change-password/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Change the authenticated user password",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "current_password": {
+                    "type": "string",
+                    "format": "password"
+                  },
+                  "new_password": {
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8
+                  },
+                  "new_password_confirm": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "current_password",
+                  "new_password",
+                  "new_password_confirm"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/delete-account/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Delete the authenticated account",
+        "description": "The current view implements POST on this route. DELETE is not currently implemented.",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/auth/update-location/": {
+      "patch": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Update the authenticated user location",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "latitude": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token/obtain/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Obtain an API token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token/refresh/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Rotate an API token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token/logout/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Delete an API token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile/retrieve/": {
+      "get": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Get the authenticated user profile",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile/update/": {
+      "patch": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Update the authenticated user profile",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 70
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 70
+                  },
+                  "birth_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "bio": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "phone_number": {
+                    "type": "string",
+                    "maxLength": 15
+                  },
+                  "profile_pic": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/skills/search/": {
+      "get": {
+        "tags": [
+          "Skills"
+        ],
+        "summary": "Search skills by location and optional text/proficiency",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Overrides the authenticated user location when longitude is also provided."
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Overrides the authenticated user location when latitude is also provided."
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 5
+            },
+            "description": "Maximum distance in km. Current view default is 5."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "proficiency",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/skills/list/": {
+      "get": {
+        "tags": [
+          "Skills"
+        ],
+        "summary": "List skills for a talent",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "talent",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/skills/retrieve/{skill_id}": {
+      "get": {
+        "tags": [
+          "Skills"
+        ],
+        "summary": "Retrieve a skill",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "skill_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/skills/create/": {
+      "post": {
+        "tags": [
+          "Skills"
+        ],
+        "summary": "Create a skill for the authenticated talent",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1200
+                  },
+                  "proficiency": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5
+                    ]
+                  },
+                  "years": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1,
+                      3,
+                      5,
+                      7
+                    ]
+                  }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "proficiency",
+                  "years"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Skill"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/skills/update/{skill_id}/": {
+      "patch": {
+        "tags": [
+          "Skills"
+        ],
+        "summary": "Update an owned skill",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "skill_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 1200
+                  },
+                  "proficiency": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5
+                    ]
+                  },
+                  "years": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1,
+                      3,
+                      5,
+                      7
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Skill"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/skills/delete/{skill_id}/": {
+      "delete": {
+        "tags": [
+          "Skills"
+        ],
+        "summary": "Delete an owned skill",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "skill_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/skills/my-skills/": {
+      "get": {
+        "tags": [
+          "Skills"
+        ],
+        "summary": "List the authenticated talent skills",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gigs/list/": {
+      "get": {
+        "tags": [
+          "Gigs"
+        ],
+        "summary": "List gigs for an owned talent profile",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "talent",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Gig"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gigs/retrieve/{gig_id}/": {
+      "get": {
+        "tags": [
+          "Gigs"
+        ],
+        "summary": "Retrieve a gig",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "gig_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Gig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gigs/create/": {
+      "post": {
+        "tags": [
+          "Gigs"
+        ],
+        "summary": "Create a gig for the authenticated talent",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "images_uris": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "nullable": true
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "decimal",
+                    "exclusiveMinimum": 0
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "tags": {
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "price"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Gig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gigs/update/{gig_id}/": {
+      "patch": {
+        "tags": [
+          "Gigs"
+        ],
+        "summary": "Update an owned gig",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "gig_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "images_uris": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "nullable": true
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "decimal",
+                    "exclusiveMinimum": 0
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "tags": {
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "price"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Gig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gigs/delete/{gig_id}/": {
+      "delete": {
+        "tags": [
+          "Gigs"
+        ],
+        "summary": "Delete an owned gig",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "gig_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/gigs/search/": {
+      "get": {
+        "tags": [
+          "Gigs"
+        ],
+        "summary": "Search active gigs by location and optional text",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Overrides the authenticated user location when longitude is also provided."
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Overrides the authenticated user location when latitude is also provided."
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 5
+            },
+            "description": "Maximum distance in km. Current view default is 5."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Gig"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gigs/my-gigs/": {
+      "get": {
+        "tags": [
+          "Gigs"
+        ],
+        "summary": "List the authenticated talent gigs",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "is_active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GigList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contracts/list/": {
+      "get": {
+        "tags": [
+          "Contracts"
+        ],
+        "summary": "List contracts involving the authenticated user",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Activo",
+                "Concluido",
+                "Confirmado",
+                "Disputa",
+                "Cancelado",
+                "Propuesta"
+              ]
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min_created_at",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "max_created_at",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "min_updated_at",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "max_updated_at",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Contract"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contracts/retrieve/{contract_id}/": {
+      "get": {
+        "tags": [
+          "Contracts"
+        ],
+        "summary": "Retrieve an owned contract",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "contract_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contracts/create/": {
+      "post": {
+        "tags": [
+          "Contracts"
+        ],
+        "summary": "Create a contract proposal",
+        "description": "The client is initially null. Price and price_type default from the selected gig when omitted.",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gig": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "decimal",
+                    "nullable": true
+                  },
+                  "price_type": {
+                    "type": "string",
+                    "enum": [
+                      "Fijo",
+                      "Horas"
+                    ]
+                  }
+                },
+                "required": [
+                  "gig"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contracts/update/{contract_id}/": {
+      "patch": {
+        "tags": [
+          "Contracts"
+        ],
+        "summary": "Update contract status or pricing",
+        "description": "The current view does not enforce ownership before loading the contract; closed contracts cannot be updated by the serializer.",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "contract_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "Activo",
+                      "Concluido",
+                      "Confirmado",
+                      "Disputa",
+                      "Cancelado",
+                      "Propuesta"
+                    ]
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "decimal"
+                  },
+                  "price_type": {
+                    "type": "string",
+                    "enum": [
+                      "Fijo",
+                      "Horas"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contracts/delete/{contract_id}/": {
+      "delete": {
+        "tags": [
+          "Contracts"
+        ],
+        "summary": "Delete an owned contract",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "contract_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/contracts/accept/{contract_id}/": {
+      "patch": {
+        "tags": [
+          "Contracts"
+        ],
+        "summary": "Accept a contract proposal",
+        "description": "The authenticated user is assigned as client and status changes from Propuesta to Activo.",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "contract_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/list/": {
+      "get": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "List reviews for a gig",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "gig",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/retrieve/{review_id}/": {
+      "get": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Retrieve a review",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/update/{review_id}/": {
+      "patch": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Update the authenticated user review portion",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "review": {
+                    "type": "string",
+                    "maxLength": 1200
+                  },
+                  "satisfaction": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "client_review": {
+                    "type": "string",
+                    "maxLength": 1200
+                  },
+                  "client_satisfaction": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "talent_review": {
+                    "type": "string",
+                    "maxLength": 1200
+                  },
+                  "talent_satisfaction": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/my-reviews/": {
+      "get": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "List reviews involving the authenticated user",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "contract_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "min_client_satisfaction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            }
+          },
+          {
+            "name": "min_talent_satisfaction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/talents/search/": {
+      "get": {
+        "tags": [
+          "Talents"
+        ],
+        "summary": "Search talents by location",
+        "description": "Results are ordered by calculated distance. Current view default distance is 5 km.",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Overrides the authenticated user location when longitude is also provided."
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Overrides the authenticated user location when latitude is also provided."
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 5
+            },
+            "description": "Maximum distance in km. Current view default is 5."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TalentProfile"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chat/rooms/": {
+      "get": {
+        "tags": [
+          "Chat"
+        ],
+        "summary": "List chat rooms for the authenticated profile",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatRoom"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chat/rooms/{room_id}/messages/": {
+      "get": {
+        "tags": [
+          "Chat"
+        ],
+        "summary": "Synchronize messages in a room",
+        "description": "The view filters messages by room and after_id. The current implementation does not explicitly verify room membership.",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Message UUID used as the sync cursor."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "summary": "Send a message to a room",
+        "description": "The sender is derived from the authenticated profile. The room field is still required by MessageSerializer even though room_id is in the URL.",
+        "security": [
+          {
+            "SessionAuth": []
+          },
+          {
+            "TokenAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "room": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "content": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10000
+                  },
+                  "attachment": {
+                    "type": "string",
+                    "format": "binary",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "room",
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or invalid filter error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

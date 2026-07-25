@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { api, ApiError } from "@/utils/api";
+import { setToken } from "@/utils/auth";
 
 export function Signup() {
     const navigate = useNavigate();
@@ -50,7 +51,7 @@ export function Signup() {
 
         setIsSubmitting(true);
         try {
-            await api("/api/auth/register/", {
+            const data = await api("/api/auth/register/", {
                 method: "POST",
                 body: {
                     username: username.trim(),
@@ -60,8 +61,9 @@ export function Signup() {
                 },
             });
 
-            // Registration successful — navigate to login
-            navigate("/login");
+            // Registration successful — store token and go straight to home
+            setToken(data.token);
+            navigate("/home");
         } catch (err) {
             if (err instanceof ApiError) {
                 const newErrors: typeof errors = {};

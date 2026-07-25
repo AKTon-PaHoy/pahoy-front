@@ -12,6 +12,8 @@ import { NotFound } from "@/pages/not-found";
 import { Search } from "@/pages/search";
 import { Signup } from "@/pages/signup";
 import { Splash } from "@/pages/splash";
+import { Profile } from "@/pages/profile";
+import { ChangePassword } from "@/pages/change-password";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { api, validateToken } from "@/utils/api";
@@ -86,6 +88,8 @@ function AnimatedRoutes() {
                     <Route path="/search" element={<RequireAuth><RequireOnboarding><PageTransition><Search /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/gig/:id" element={<RequireAuth><RequireOnboarding><PageTransition><GigOverview /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/complete-profile" element={<RequireAuth><PageTransition><CompleteProfile /></PageTransition></RequireAuth>} />
+                    <Route path="/profile" element={<RequireAuth><RequireOnboarding><PageTransition><Profile /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/profile/change-password" element={<RequireAuth><PageTransition><ChangePassword /></PageTransition></RequireAuth>} />
                     <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
                 </Routes>
             </AnimatePresence>

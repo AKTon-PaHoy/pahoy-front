@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "PaHoy API",
-    "version": "1.2.0",
-    "description": "API contract generated from the currently routed Django REST Framework endpoints. The URL configuration, views, serializers, and models are the source of truth. Collection endpoints use DRF page-number pagination with a default page size of 20. Blog, KYC, knowledge, support, billing, and payment models exist or are planned, but no public API routes for them are currently exposed."
+    "version": "1.3.0",
+    "description": "API contract generated from the currently routed Django REST Framework endpoints. The URL configuration, views, serializers, and models are the source of truth. Protected API operations use DRF TokenAuthentication. Collection endpoints use DRF page-number pagination with a default page size of 20. Blog, KYC, knowledge, support, billing, and payment models exist or are planned, but no public API routes for them are currently exposed."
   },
   "servers": [
     {
@@ -43,11 +43,6 @@
   ],
   "components": {
     "securitySchemes": {
-      "SessionAuth": {
-        "type": "apiKey",
-        "in": "cookie",
-        "name": "sessionid"
-      },
       "TokenAuth": {
         "type": "apiKey",
         "in": "header",
@@ -329,16 +324,34 @@
           "description": {
             "type": "string"
           },
-          "images_uris": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
+          "gig_front_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Stored gig image URL."
+          },
+          "gig_secong_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Stored gig image URL."
+          },
+          "gig_third_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Stored gig image URL."
           },
           "price": {
             "type": "number",
             "format": "decimal"
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
           },
           "is_active": {
             "type": "boolean"
@@ -353,18 +366,6 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
-          },
-          "gig_front_img": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "price_type": {
-            "type": "string",
-            "enum": [
-              "Fijo",
-              "Horas"
-            ]
           }
         },
         "required": [
@@ -396,9 +397,34 @@
           "description": {
             "type": "string"
           },
+          "gig_front_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Stored gig image URL."
+          },
+          "gig_secong_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Stored gig image URL."
+          },
+          "gig_third_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Stored gig image URL."
+          },
           "price": {
             "type": "number",
             "format": "decimal"
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
           },
           "is_active": {
             "type": "boolean"
@@ -410,18 +436,6 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
-          },
-          "gig_front_img": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "price_type": {
-            "type": "string",
-            "enum": [
-              "Fijo",
-              "Horas"
-            ]
           }
         },
         "required": [
@@ -1039,6 +1053,188 @@
           "previous",
           "results"
         ]
+      },
+      "SkillCreate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "proficiency": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "years": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              3,
+              5,
+              7
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "proficiency",
+          "years"
+        ]
+      },
+      "SkillUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "proficiency": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "years": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              3,
+              5,
+              7
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "proficiency",
+          "years"
+        ]
+      },
+      "GigCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string"
+          },
+          "gig_front_img": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true,
+            "description": "Image file between 400x400 and 2000x2000 pixels."
+          },
+          "gig_secong_img": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true,
+            "description": "Image file between 400x400 and 2000x2000 pixels."
+          },
+          "gig_third_img": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true,
+            "description": "Image file between 400x400 and 2000x2000 pixels."
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "exclusiveMinimum": 0
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": true
+          },
+          "tags": {
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "price"
+        ]
+      },
+      "GigUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string"
+          },
+          "gig_front_img": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true,
+            "description": "Image file between 400x400 and 2000x2000 pixels."
+          },
+          "gig_secong_img": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true,
+            "description": "Image file between 400x400 and 2000x2000 pixels."
+          },
+          "gig_third_img": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true,
+            "description": "Image file between 400x400 and 2000x2000 pixels."
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "exclusiveMinimum": 0
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": true
+          },
+          "tags": {
+            "nullable": true
+          }
+        }
       }
     },
     "parameters": {
@@ -1193,7 +1389,7 @@
             }
           }
         },
-        "description": "Accepts an email address and password. On success, establishes the sessionid cookie and returns a token plus user data."
+        "description": "Accepts an email address and password. Email matching is case-insensitive. On success, establishes the sessionid cookie and returns a token plus user data."
       }
     },
     "/api/auth/logout/": {
@@ -1216,9 +1412,6 @@
         ],
         "summary": "Get the authenticated user",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -1274,9 +1467,6 @@
         ],
         "summary": "Change the authenticated user email",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -1354,9 +1544,6 @@
         ],
         "summary": "Change the authenticated user password",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -1437,9 +1624,6 @@
         "description": "The current view implements POST on this route. DELETE is not currently implemented.",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -1476,9 +1660,6 @@
         ],
         "summary": "Update the authenticated user location",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -1566,9 +1747,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": {
+                  "email": {
                     "type": "string",
-                    "description": "User email address. The field name is retained for token endpoint compatibility."
+                    "format": "email"
                   },
                   "password": {
                     "type": "string",
@@ -1576,7 +1757,7 @@
                   }
                 },
                 "required": [
-                  "username",
+                  "email",
                   "password"
                 ]
               }
@@ -1625,7 +1806,7 @@
             }
           }
         },
-        "description": "The request field is named username for compatibility, but its value is the user's email because email is the User.USERNAME_FIELD."
+        "description": "Accepts an email address and password. Email matching is case-insensitive and returns a token plus user data."
       }
     },
     "/api/auth/token/refresh/": {
@@ -1772,9 +1953,6 @@
         "summary": "Get the authenticated user profile",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -1830,9 +2008,6 @@
         "summary": "Update the authenticated user profile",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -1865,7 +2040,8 @@
                   },
                   "profile_pic": {
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "description": "Image file between 400x400 and 2000x2000 pixels."
                   }
                 }
               }
@@ -1923,9 +2099,6 @@
         ],
         "summary": "Search skills by location and optional text/proficiency",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -2038,9 +2211,6 @@
         "summary": "List skills for a talent",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -2110,9 +2280,6 @@
         "summary": "Retrieve a skill",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -2179,9 +2346,6 @@
         "summary": "Create a skill for the authenticated talent",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -2223,9 +2387,7 @@
                 },
                 "required": [
                   "name",
-                  "description",
-                  "proficiency",
-                  "years"
+                  "description"
                 ]
               }
             }
@@ -2237,7 +2399,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Skill"
+                  "$ref": "#/components/schemas/SkillCreate"
                 }
               }
             }
@@ -2282,9 +2444,6 @@
         ],
         "summary": "Update an owned skill",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -2346,7 +2505,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Skill"
+                  "$ref": "#/components/schemas/SkillUpdate"
                 }
               }
             }
@@ -2392,9 +2551,6 @@
         "summary": "Delete an owned skill",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -2423,9 +2579,6 @@
         ],
         "summary": "List the authenticated talent skills",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -2486,9 +2639,6 @@
         ],
         "summary": "List gigs for an owned talent profile",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -2559,9 +2709,6 @@
         "summary": "Retrieve a gig",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -2628,51 +2775,15 @@
         "summary": "Create a gig for the authenticated talent",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "maxLength": 255
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "images_uris": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "nullable": true
-                  },
-                  "price": {
-                    "type": "number",
-                    "format": "decimal",
-                    "exclusiveMinimum": 0
-                  },
-                  "is_active": {
-                    "type": "boolean",
-                    "default": true
-                  },
-                  "tags": {
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "name",
-                  "description",
-                  "price"
-                ]
+                "$ref": "#/components/schemas/GigCreateRequest"
               }
             }
           }
@@ -2729,9 +2840,6 @@
         "summary": "Update an owned gig",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -2749,42 +2857,9 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "maxLength": 255
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "images_uris": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "nullable": true
-                  },
-                  "price": {
-                    "type": "number",
-                    "format": "decimal",
-                    "exclusiveMinimum": 0
-                  },
-                  "is_active": {
-                    "type": "boolean",
-                    "default": true
-                  },
-                  "tags": {
-                    "nullable": true
-                  }
-                },
-                "required": [
-                  "name",
-                  "description",
-                  "price"
-                ]
+                "$ref": "#/components/schemas/GigUpdateRequest"
               }
             }
           }
@@ -2841,9 +2916,6 @@
         "summary": "Delete an owned gig",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -2872,9 +2944,6 @@
         ],
         "summary": "Search active gigs by location and optional text",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -2972,9 +3041,6 @@
         "summary": "List the authenticated talent gigs",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -3046,9 +3112,6 @@
         ],
         "summary": "List contracts involving the authenticated user",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -3178,9 +3241,6 @@
         "summary": "Retrieve an owned contract",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -3247,9 +3307,6 @@
         "summary": "Create a contract proposal",
         "description": "The client is initially null. Price and price_type default from the selected gig when omitted.",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -3337,9 +3394,6 @@
         "summary": "Update contract status or pricing",
         "description": "The current view does not enforce ownership before loading the contract; closed contracts cannot be updated by the serializer.",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -3441,9 +3495,6 @@
         "summary": "Delete an owned contract",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -3473,9 +3524,6 @@
         "summary": "Accept a contract proposal",
         "description": "The authenticated user is assigned as client and status changes from Propuesta to Activo.",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -3542,9 +3590,6 @@
         ],
         "summary": "List reviews for a gig",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -3615,9 +3660,6 @@
         "summary": "Retrieve a review",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -3683,9 +3725,6 @@
         ],
         "summary": "Update the authenticated user review portion",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -3792,9 +3831,6 @@
         "summary": "List reviews involving the authenticated user",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -3885,9 +3921,6 @@
         "description": "Results are ordered by calculated distance. Current view default distance is 5 km.",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -3976,9 +4009,6 @@
         "summary": "List chat rooms for the authenticated profile",
         "security": [
           {
-            "SessionAuth": []
-          },
-          {
             "TokenAuth": []
           }
         ],
@@ -4039,9 +4069,6 @@
         "summary": "Synchronize messages in a room",
         "description": "The view filters messages by room and after_id. The current implementation does not explicitly verify room membership.",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }
@@ -4120,9 +4147,6 @@
         "summary": "Send a message to a room",
         "description": "The sender is derived from the authenticated profile. The room field is still required by MessageSerializer even though room_id is in the URL.",
         "security": [
-          {
-            "SessionAuth": []
-          },
           {
             "TokenAuth": []
           }

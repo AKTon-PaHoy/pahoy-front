@@ -23,7 +23,7 @@ export function BottomNavigation() {
     const location = useLocation();
 
     return (
-        <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-neutral-200 bg-white pb-safe">
+        <nav className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-[750px] rounded-t-2xl border-t border-x border-neutral-200 bg-white pb-safe">
             <div className="flex items-center justify-around px-2 pt-2 pb-2">
                 {navItems.map((item) => {
                     const isActive = location.pathname.startsWith(item.path);

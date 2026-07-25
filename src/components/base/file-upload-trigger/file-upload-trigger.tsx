@@ -1,6 +1,6 @@
 import type { DetailedReactHTMLElement, HTMLAttributes, ReactNode } from "react";
 import React, { cloneElement, useRef } from "react";
-import { filterDOMProps } from "@react-aria/utils";
+import { filterDOMProps } from "react-aria/filterDOMProps";
 
 interface FileTriggerProps {
     /**
@@ -63,7 +63,7 @@ export const FileTrigger = (props: FileTriggerProps) => {
                 onChange={(e) => onSelect?.(e.target.files)}
                 capture={defaultCamera}
                 multiple={allowsMultiple}
-                // @ts-expect-error
+                // @ts-expect-error - webkitdirectory is not in React's type definitions
                 webkitdirectory={acceptDirectory ? "" : undefined}
             />
         </>

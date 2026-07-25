@@ -1,4 +1,4 @@
-import { useControlledState } from "@react-stately/utils";
+import { useControlledState } from "react-stately/useControlledState";
 import { HintText } from "@/components/base/input/hint-text";
 import type { InputProps } from "@/components/base/input/input";
 import { InputBase, TextField } from "@/components/base/input/input";
@@ -101,7 +101,7 @@ export const PaymentInput = ({
     type = "text",
     ...props
 }: PaymentInputProps) => {
-    const [cardNumber, setCardNumber] = useControlledState(value, defaultValue || "", (value) => {
+    const [cardNumber, setCardNumber] = useControlledState(value, defaultValue || "", (value: string) => {
         // Remove all non-numeric characters
         value = value.replace(/\D/g, "");
 

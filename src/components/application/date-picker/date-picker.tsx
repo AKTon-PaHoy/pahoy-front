@@ -1,5 +1,5 @@
 import { getLocalTimeZone, today } from "@internationalized/date";
-import { useControlledState } from "@react-stately/utils";
+import { useControlledState } from "react-stately/useControlledState";
 import { Calendar as CalendarIcon } from "@untitledui/icons";
 import { useDateFormatter } from "react-aria";
 import type { DatePickerProps as AriaDatePickerProps, DateValue } from "react-aria-components";

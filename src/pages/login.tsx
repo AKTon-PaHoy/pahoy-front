@@ -43,7 +43,7 @@ export function Login() {
             await api("/api/auth/login/", {
                 method: "POST",
                 body: {
-                    username: email.trim(),
+                    email: email.trim(),
                     password,
                 },
             });
@@ -65,7 +65,7 @@ export function Login() {
                     );
                 } else {
                     const newErrors: typeof errors = {};
-                    if (fe.username) newErrors.email = fe.username[0];
+                    if (fe.email) newErrors.email = fe.email[0];
                     if (fe.password) newErrors.password = fe.password[0];
                     if (Object.keys(newErrors).length > 0) {
                         setErrors(newErrors);

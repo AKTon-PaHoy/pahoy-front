@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
     { label: "Inicio", path: "/home", icon: Home02 },
     { label: "Buscar", path: "/search", icon: SearchLg },
     { label: "Contratos", path: "/contracts", icon: ClipboardCheck },
-    { label: "Mis Gigs", path: "/gigs", icon: Briefcase02 },
+    { label: "Chambas", path: "/gigs", icon: Briefcase02 },
     { label: "Perfil", path: "/profile", icon: User01 },
 ];
 

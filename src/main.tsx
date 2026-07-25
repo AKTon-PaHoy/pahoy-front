@@ -99,7 +99,9 @@ createRoot(document.getElementById("root")!).render(
         <ThemeProvider>
             <BrowserRouter>
                 <RouteProvider>
-                    <AnimatedRoutes />
+                    <div className="mx-auto max-w-[750px]">
+                        <AnimatedRoutes />
+                    </div>
                 </RouteProvider>
             </BrowserRouter>
         </ThemeProvider>

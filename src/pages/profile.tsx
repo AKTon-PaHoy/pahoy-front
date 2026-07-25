@@ -3,9 +3,12 @@ import { AlertTriangle, Camera01, User01 } from "@untitledui/icons";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 
+import { ImageCropper } from "@/components/application/image-cropper/image-cropper";
 import { Dialog, DialogTrigger, Modal, ModalOverlay } from "@/components/application/modals/modal";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
+import { LocationSection } from "@/components/application/location/location-section";
+import { fromGeoJSON } from "@/utils/coordinates";
 import { api, apiMultipart, ApiError } from "@/utils/api";
 import { clearToken } from "@/utils/auth";
 
@@ -31,14 +34,17 @@ export function Profile() {
     }>({});
     const [isUploadingPic, setIsUploadingPic] = useState(false);
     const [picError, setPicError] = useState<string | null>(null);
+    const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+    const [cropperImageSrc, setCropperImageSrc] = useState<string | null>(null);
+    const [showCropper, setShowCropper] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [userData, profileData] = await Promise.all([
-                    api<{ username: string; email: string }>("/api/auth/user/"),
+                    api<{ username: string; email: string; location: string | { type: string; coordinates: [number, number] } | null }>("/api/auth/user/"),
                     api<{
                         first_name: string;
                         last_name: string;
@@ -55,6 +61,8 @@ export function Profile() {
                 setBio(profileData.bio);
                 setPhoneNumber(profileData.phone_number);
                 setProfilePicUrl(profileData.profile_pic);
+                // Extract coordinates from user location
+                setUserCoordinates(fromGeoJSON(userData.location));
             } catch {
                 setFetchError(
                     "No pudimos cargar tu perfil. Intenta de nuevo más tarde.",
@@ -67,30 +75,56 @@ export function Profile() {
         fetchData();
     }, []);
 
-    const handlePicChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        const objectUrl = URL.createObjectURL(file);
+        setCropperImageSrc(objectUrl);
+        setShowCropper(true);
+        // Reset file input so re-selecting same file triggers change
+        e.target.value = "";
+    };
 
+    useEffect(() => {
+        return () => {
+            if (cropperImageSrc) {
+                URL.revokeObjectURL(cropperImageSrc);
+            }
+        };
+    }, [cropperImageSrc]);
+
+    const handleCropComplete = async (blob: Blob) => {
+        // Close cropper and revoke source
+        if (cropperImageSrc) {
+            URL.revokeObjectURL(cropperImageSrc);
+            setCropperImageSrc(null);
+        }
+        setShowCropper(false);
+
+        // Upload the cropped image
         setPicError(null);
         setIsUploadingPic(true);
         try {
             const formData = new FormData();
-            formData.append("profile_pic", file);
+            formData.append("profile_pic", blob, "profile.jpg");
             const result = await apiMultipart<{ profile_pic: string | null }>(
                 "/api/profile/update/",
-                {
-                    method: "PATCH",
-                    body: formData,
-                },
+                { method: "PATCH", body: formData },
             );
             setProfilePicUrl(result.profile_pic);
         } catch {
             setPicError("No se pudo subir la imagen");
         } finally {
             setIsUploadingPic(false);
-            // Reset file input so the same file can be re-selected
-            if (fileInputRef.current) fileInputRef.current.value = "";
         }
+    };
+
+    const handleCropCancel = () => {
+        if (cropperImageSrc) {
+            URL.revokeObjectURL(cropperImageSrc);
+            setCropperImageSrc(null);
+        }
+        setShowCropper(false);
     };
 
     const handleLogout = async () => {
@@ -221,7 +255,7 @@ export function Profile() {
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={handlePicChange}
+                    onChange={handleFileSelect}
                 />
                 {picError && (
                     <p className="mt-2 text-center text-sm text-error-primary">
@@ -305,6 +339,12 @@ export function Profile() {
                     hint={errors.bio}
                 />
 
+                {/* Location Section */}
+                <LocationSection
+                    coordinates={userCoordinates}
+                    onLocationUpdated={setUserCoordinates}
+                />
+
                 {showSuccess && (
                     <p className="text-center text-sm text-success-primary">
                         Perfil actualizado correctamente
@@ -379,6 +419,15 @@ export function Profile() {
                     </DialogTrigger>
                 </div>
             </form>
+
+            {showCropper && cropperImageSrc && (
+                <ImageCropper
+                    imageSrc={cropperImageSrc}
+                    outputSize={400}
+                    onCropComplete={handleCropComplete}
+                    onCancel={handleCropCancel}
+                />
+            )}
         </motion.div>
     );
 }

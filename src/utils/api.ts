@@ -1,3 +1,5 @@
+import { getToken } from "@/utils/auth";
+
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 /**
@@ -34,8 +36,9 @@ export async function api<T>(
         "Content-Type": "application/json",
     };
 
-    if (token) {
-        headers["Authorization"] = `Token ${token}`;
+    const authToken = token || getToken();
+    if (authToken) {
+        headers["Authorization"] = `Token ${authToken}`;
     }
 
     const res = await fetch(`${BASE_URL}${path}`, {

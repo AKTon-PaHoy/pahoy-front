@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { api, ApiError } from "@/utils/api";
+import { setToken } from "@/utils/auth";
 
 export function Login() {
     const navigate = useNavigate();
@@ -40,7 +41,7 @@ export function Login() {
 
         setIsSubmitting(true);
         try {
-            await api("/api/auth/login/", {
+            const response = await api<{ token: string }>("/api/auth/login/", {
                 method: "POST",
                 body: {
                     email: email.trim(),
@@ -48,6 +49,7 @@ export function Login() {
                 },
             });
 
+            setToken(response.token);
             navigate("/home");
         } catch (err) {
             if (err instanceof ApiError) {

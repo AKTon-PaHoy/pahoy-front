@@ -79,6 +79,58 @@ export async function api<T>(
     throw new ApiError(res.status, fieldErrors);
 }
 
+/**
+ * Fetch wrapper for multipart/form-data requests (e.g. file uploads).
+ * Does NOT set Content-Type — the browser adds it with the boundary automatically.
+ * Throws an `ApiError` on non-2xx responses.
+ */
+export async function apiMultipart<T>(
+    path: string,
+    { method = "PATCH", body }: { method?: string; body: FormData },
+): Promise<T> {
+    const headers: Record<string, string> = {};
+
+    const authToken = getToken();
+    if (authToken) {
+        headers["Authorization"] = `Token ${authToken}`;
+    }
+
+    const res = await fetch(`${BASE_URL}${path}`, {
+        method,
+        headers,
+        body,
+    });
+
+    if (res.ok) {
+        // 204 No Content
+        if (res.status === 204) return undefined as T;
+        return res.json() as Promise<T>;
+    }
+
+    // Try to parse validation errors
+    let fieldErrors: Record<string, string[]> = {};
+    try {
+        const data = await res.json();
+        if (typeof data === "object" && data !== null) {
+            if ("detail" in data) {
+                fieldErrors = { _general: [data.detail] };
+            } else {
+                fieldErrors = data as Record<string, string[]>;
+            }
+        }
+    } catch {
+        // Response wasn't JSON
+    }
+
+    // If 401 and we had a token, it's expired — clear and redirect to splash
+    if (res.status === 401 && getToken()) {
+        clearToken();
+        window.location.href = "/";
+    }
+
+    throw new ApiError(res.status, fieldErrors);
+}
+
 /** Check if a stored token is still valid by hitting /api/auth/user/ */
 export async function validateToken(): Promise<boolean> {
     const token = getToken();

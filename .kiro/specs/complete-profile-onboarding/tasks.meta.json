@@ -1,0 +1,155 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Add `apiMultipart()` helper to the API utility": [
+      {
+        "executionId": "b109b044-6b55-4b4b-a07c-b91e23c13c69",
+        "chatSessionId": "sess_0fe8fc35-2fd2-4d17-a865-1791fa378ada",
+        "timestamp": 1784997101977
+      },
+      {
+        "executionId": "b109b044-6b55-4b4b-a07c-b91e23c13c69",
+        "chatSessionId": "sess_0fe8fc35-2fd2-4d17-a865-1791fa378ada",
+        "timestamp": 1784997179487
+      }
+    ],
+    "1.1 Implement `apiMultipart()` function in `src/utils/api.ts`": [
+      {
+        "executionId": "b109b044-6b55-4b4b-a07c-b91e23c13c69",
+        "chatSessionId": "sess_0fe8fc35-2fd2-4d17-a865-1791fa378ada",
+        "timestamp": 1784997179427
+      }
+    ],
+    "2.1 Create `src/components/application/image-cropper/image-cropper.tsx`": [
+      {
+        "executionId": "065aa760-d437-40b9-8859-856d832f5f2c",
+        "chatSessionId": "sess_b681637b-0753-4ea8-b7ef-88970651fa4d",
+        "timestamp": 1784997264407
+      },
+      {
+        "executionId": "065aa760-d437-40b9-8859-856d832f5f2c",
+        "chatSessionId": "sess_b681637b-0753-4ea8-b7ef-88970651fa4d",
+        "timestamp": 1784997383071
+      }
+    ],
+    "2. Create Image Cropper component": [
+      {
+        "executionId": "065aa760-d437-40b9-8859-856d832f5f2c",
+        "chatSessionId": "sess_b681637b-0753-4ea8-b7ef-88970651fa4d",
+        "timestamp": 1784997383112
+      }
+    ],
+    "3.1 Create `src/pages/complete-profile.tsx` with page layout and header": [
+      {
+        "executionId": "8610e9d9-3a46-445a-a3f8-45c2e4900640",
+        "chatSessionId": "sess_b4115165-3acf-4077-8cd2-25727fdaf199",
+        "timestamp": 1784997518082
+      },
+      {
+        "executionId": "8610e9d9-3a46-445a-a3f8-45c2e4900640",
+        "chatSessionId": "sess_b4115165-3acf-4077-8cd2-25727fdaf199",
+        "timestamp": 1784997583833
+      }
+    ],
+    "3.2 Implement profile picture upload with cropper integration": [
+      {
+        "executionId": "c7c88145-bd09-4d0d-9eb1-a9cf29a2eb58",
+        "chatSessionId": "sess_30288f68-9b73-48d8-92d7-e11257ce7668",
+        "timestamp": 1784997672838
+      },
+      {
+        "executionId": "c7c88145-bd09-4d0d-9eb1-a9cf29a2eb58",
+        "chatSessionId": "sess_30288f68-9b73-48d8-92d7-e11257ce7668",
+        "timestamp": 1784997870474
+      }
+    ],
+    "4.1 Implement client-side validation": [
+      {
+        "executionId": "e7082763-2ef8-434f-9674-5f6a4b706f7e",
+        "chatSessionId": "sess_5aec4b46-ba38-4c9f-b3ca-f143fb39b28c",
+        "timestamp": 1784998202130
+      },
+      {
+        "executionId": "e7082763-2ef8-434f-9674-5f6a4b706f7e",
+        "chatSessionId": "sess_5aec4b46-ba38-4c9f-b3ca-f143fb39b28c",
+        "timestamp": 1784998476965
+      }
+    ],
+    "4.2 Implement form submission with `apiMultipart()`": [
+      {
+        "executionId": "e7082763-2ef8-434f-9674-5f6a4b706f7e",
+        "chatSessionId": "sess_5aec4b46-ba38-4c9f-b3ca-f143fb39b28c",
+        "timestamp": 1784998203124
+      },
+      {
+        "executionId": "e7082763-2ef8-434f-9674-5f6a4b706f7e",
+        "chatSessionId": "sess_5aec4b46-ba38-4c9f-b3ca-f143fb39b28c",
+        "timestamp": 1784998477746
+      }
+    ],
+    "4.3 Implement success screen with auto-redirect": [
+      {
+        "executionId": "e7082763-2ef8-434f-9674-5f6a4b706f7e",
+        "chatSessionId": "sess_5aec4b46-ba38-4c9f-b3ca-f143fb39b28c",
+        "timestamp": 1784998204118
+      },
+      {
+        "executionId": "e7082763-2ef8-434f-9674-5f6a4b706f7e",
+        "chatSessionId": "sess_5aec4b46-ba38-4c9f-b3ca-f143fb39b28c",
+        "timestamp": 1784998478571
+      }
+    ],
+    "4. Implement form validation, submission, and success screen": [
+      {
+        "executionId": "e7082763-2ef8-434f-9674-5f6a4b706f7e",
+        "chatSessionId": "sess_5aec4b46-ba38-4c9f-b3ca-f143fb39b28c",
+        "timestamp": 1784998478627
+      }
+    ],
+    "5. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "2f2e9641-6024-44cb-974e-1c8e3e586b61",
+        "chatSessionId": "sess_12170b82-915f-4322-af0e-f6027a0d1bf5",
+        "timestamp": 1784998612697
+      }
+    ],
+    "6.1 Implement `RequireOnboarding` component in `src/main.tsx`": [
+      {
+        "executionId": "72bf2ebc-7eab-4e11-9c8a-90fbe01f5ed7",
+        "chatSessionId": "sess_d64ce9af-bc8b-4fe5-b482-dc9b63435bfb",
+        "timestamp": 1784998732697
+      },
+      {
+        "executionId": "72bf2ebc-7eab-4e11-9c8a-90fbe01f5ed7",
+        "chatSessionId": "sess_d64ce9af-bc8b-4fe5-b482-dc9b63435bfb",
+        "timestamp": 1784998827396
+      }
+    ],
+    "6.2 Update route configuration in `src/main.tsx`": [
+      {
+        "executionId": "72bf2ebc-7eab-4e11-9c8a-90fbe01f5ed7",
+        "chatSessionId": "sess_d64ce9af-bc8b-4fe5-b482-dc9b63435bfb",
+        "timestamp": 1784998831081
+      }
+    ],
+    "6. Add RequireOnboarding route guard and wire routes": [
+      {
+        "executionId": "72bf2ebc-7eab-4e11-9c8a-90fbe01f5ed7",
+        "chatSessionId": "sess_d64ce9af-bc8b-4fe5-b482-dc9b63435bfb",
+        "timestamp": 1784998831129
+      }
+    ],
+    "8. Visual Validate": [
+      {
+        "executionId": "dd03dd72-3d57-47fa-89bb-0ab3c0e925d8",
+        "chatSessionId": "sess_1a7b2511-6356-46a5-9676-d4501a29a1ca",
+        "timestamp": 1784998934340
+      },
+      {
+        "executionId": "1c149ab0-962b-4409-ab20-a3035318c290",
+        "chatSessionId": "sess_1a7b2511-6356-46a5-9676-d4501a29a1ca",
+        "timestamp": 1785000752897
+      }
+    ]
+  }
+}

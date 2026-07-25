@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { CheckCircle, ChevronLeft, Lock01, Mail01 } from "@untitledui/icons";
+import { AlertTriangle, ChevronLeft, Lock01, Mail01 } from "@untitledui/icons";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 
@@ -7,37 +7,26 @@ import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { api, ApiError } from "@/utils/api";
 
-export function Signup() {
+export function Login() {
     const navigate = useNavigate();
-    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [generalError, setGeneralError] = useState("");
     const [errors, setErrors] = useState<{
-        username?: string;
         email?: string;
         password?: string;
-        confirmPassword?: string;
     }>({});
 
     const validateForm = () => {
         const newErrors: typeof errors = {};
 
-        if (!username.trim()) {
-            newErrors.username = "El usuario es requerido";
-        }
-
         if (!email.trim()) {
-            newErrors.email = "El correo es requerido";
+            newErrors.email = "El correo o usuario es requerido";
         }
 
-        if (password.length < 8) {
-            newErrors.password = "Tu contraseña necesita al menos 8 caracteres";
-        }
-
-        if (password !== confirmPassword) {
-            newErrors.confirmPassword = "Las contraseñas no coinciden";
+        if (!password.trim()) {
+            newErrors.password = "La contraseña es requerida";
         }
 
         setErrors(newErrors);
@@ -46,67 +35,50 @@ export function Signup() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setGeneralError("");
         if (!validateForm()) return;
 
         setIsSubmitting(true);
         try {
-            await api("/api/auth/register/", {
+            await api("/api/auth/login/", {
                 method: "POST",
                 body: {
-                    username: username.trim(),
-                    email: email.trim(),
+                    username: email.trim(),
                     password,
-                    password_confirm: confirmPassword,
                 },
             });
 
-            // Registration successful — navigate to login
-            navigate("/login");
+            navigate("/home");
         } catch (err) {
             if (err instanceof ApiError) {
-                const newErrors: typeof errors = {};
                 const fe = err.fieldErrors;
 
-                if (fe.username) {
-                    newErrors.username = fe.username[0];
-                }
-                if (fe.email) {
-                    newErrors.email = fe.email[0];
-                }
-                if (fe.password) {
-                    newErrors.password = fe.password[0];
-                }
-                if (fe.password_confirm) {
-                    newErrors.confirmPassword = fe.password_confirm[0];
-                }
-                if (fe.non_field_errors) {
-                    // Show generic errors on password confirm field
-                    newErrors.confirmPassword = fe.non_field_errors[0];
-                }
                 if (fe._general) {
-                    newErrors.confirmPassword = fe._general[0];
+                    setGeneralError(fe._general[0]);
+                } else if (fe.non_field_errors) {
+                    setGeneralError(fe.non_field_errors[0]);
+                } else if (fe.detail) {
+                    setGeneralError(
+                        Array.isArray(fe.detail)
+                            ? fe.detail[0]
+                            : "Usuario o contraseña incorrectos. Revisa e intenta de nuevo",
+                    );
+                } else {
+                    const newErrors: typeof errors = {};
+                    if (fe.username) newErrors.email = fe.username[0];
+                    if (fe.password) newErrors.password = fe.password[0];
+                    if (Object.keys(newErrors).length > 0) {
+                        setErrors(newErrors);
+                    } else {
+                        setGeneralError(
+                            "Usuario o contraseña incorrectos. Revisa e intenta de nuevo",
+                        );
+                    }
                 }
-
-                setErrors(newErrors);
             }
         } finally {
             setIsSubmitting(false);
         }
-    };
-
-    const passwordHint = () => {
-        if (errors.password) {
-            return errors.password;
-        }
-        if (password.length >= 8) {
-            return (
-                <span className="flex items-center gap-1 text-success-primary">
-                    <CheckCircle className="size-3.5" />
-                    Debe tener al menos 8 caracteres
-                </span>
-            );
-        }
-        return "Debe tener al menos 8 caracteres";
     };
 
     return (
@@ -121,7 +93,6 @@ export function Signup() {
                     <ChevronLeft className="size-6" />
                 </button>
                 <img src="/thunderface.png" alt="Pa·Hoy" className="h-8" />
-                {/* Spacer to balance the layout */}
                 <div className="size-10" />
             </header>
 
@@ -135,12 +106,20 @@ export function Signup() {
                 {/* Title section */}
                 <div className="text-center">
                     <h1 className="text-display-xs font-bold text-primary">
-                        Únete a tu comunidad
+                        ¡Qué bueno verte de nuevo!
                     </h1>
                     <p className="mt-1 text-sm text-tertiary">
-                        En un minuto estás dentro
+                        Tu comunidad te espera
                     </p>
                 </div>
+
+                {/* General error banner */}
+                {generalError && (
+                    <div className="mt-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+                        <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-500" />
+                        <p className="text-sm text-red-600">{generalError}</p>
+                    </div>
+                )}
 
                 {/* Form */}
                 <form
@@ -148,26 +127,6 @@ export function Signup() {
                     onSubmit={handleSubmit}
                     noValidate
                 >
-                    <Input
-                        label="Usuario"
-                        placeholder="Ej: ramonperez"
-                        value={username}
-                        onChange={(value) => {
-                            setUsername(value);
-                            if (errors.username)
-                                setErrors((prev) => ({
-                                    ...prev,
-                                    username: undefined,
-                                }));
-                        }}
-                        isRequired
-                        isInvalid={!!errors.username}
-                        hint={
-                            errors.username ||
-                            "Con este nombre entras a Pa' Hoy"
-                        }
-                    />
-
                     <Input
                         label="Correo"
                         placeholder="tucorreo@ejemplo.com"
@@ -181,15 +140,19 @@ export function Signup() {
                                     ...prev,
                                     email: undefined,
                                 }));
+                            if (generalError) setGeneralError("");
                         }}
                         isRequired
                         isInvalid={!!errors.email}
-                        hint={errors.email}
+                        hint={
+                            errors.email ||
+                            "Tambien puedes usar tu nombre de usuario"
+                        }
                     />
 
                     <Input
                         label="Contraseña"
-                        placeholder="••••••••••"
+                        placeholder="••••••••••••"
                         type="password"
                         icon={Lock01}
                         value={password}
@@ -200,29 +163,11 @@ export function Signup() {
                                     ...prev,
                                     password: undefined,
                                 }));
+                            if (generalError) setGeneralError("");
                         }}
                         isRequired
                         isInvalid={!!errors.password}
-                        hint={passwordHint()}
-                    />
-
-                    <Input
-                        label="Repite la contraseña"
-                        placeholder="••••••••••"
-                        type="password"
-                        icon={Lock01}
-                        value={confirmPassword}
-                        onChange={(value) => {
-                            setConfirmPassword(value);
-                            if (errors.confirmPassword)
-                                setErrors((prev) => ({
-                                    ...prev,
-                                    confirmPassword: undefined,
-                                }));
-                        }}
-                        isRequired
-                        isInvalid={!!errors.confirmPassword}
-                        hint={errors.confirmPassword}
+                        hint={errors.password}
                     />
 
                     {/* Spacer to push button to bottom */}
@@ -238,19 +183,17 @@ export function Signup() {
                             isLoading={isSubmitting}
                             showTextWhileLoading
                         >
-                            {isSubmitting
-                                ? "Creando tu cuenta..."
-                                : "Crear mi cuenta"}
+                            {isSubmitting ? "Entrando..." : "Entrar"}
                         </Button>
 
                         <p className="mt-4 text-center text-sm text-tertiary">
-                            ¿Ya tienes cuenta?{" "}
+                            ¿Nuevo por aquí?{" "}
                             <button
                                 type="button"
-                                onClick={() => navigate("/login")}
+                                onClick={() => navigate("/signup")}
                                 className="font-semibold text-brand-600"
                             >
-                                Entra aquí
+                                Crea tu cuenta
                             </button>
                         </p>
                     </div>

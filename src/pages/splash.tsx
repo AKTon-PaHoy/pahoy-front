@@ -41,7 +41,12 @@ export function Splash() {
                     >
                         Crear mi cuenta
                     </Button>
-                    <Button color="secondary" size="xl" className="w-full">
+                    <Button
+                        color="secondary"
+                        size="xl"
+                        className="w-full"
+                        onClick={() => navigate("/login")}
+                    >
                         Ya tengo cuenta
                     </Button>
                 </div>

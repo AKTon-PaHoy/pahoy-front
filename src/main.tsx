@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { HomeScreen } from "@/pages/home-screen";
+import { Login } from "@/pages/login";
 import { NotFound } from "@/pages/not-found";
 import { Signup } from "@/pages/signup";
 import { Splash } from "@/pages/splash";
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")!).render(
                     <Routes>
                         <Route path="/" element={<Splash />} />
                         <Route path="/signup" element={<Signup />} />
+                        <Route path="/login" element={<Login />} />
                         <Route path="/home" element={<HomeScreen />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>

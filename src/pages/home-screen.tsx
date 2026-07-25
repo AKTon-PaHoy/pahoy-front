@@ -10,6 +10,7 @@ interface Gig {
     talent: string;
     name: string;
     description: string;
+    gig_front_img?: string | null;
     images_uris?: string[] | null;
     price: number;
     is_active: boolean;
@@ -113,7 +114,7 @@ export const HomeScreen = () => {
                                 isVerified
                                 price={gig.price}
                                 imageUrl={
-                                    gig.images_uris?.[0] || undefined
+                                    gig.gig_front_img || gig.images_uris?.[0] || undefined
                                 }
                             />
                         ))}

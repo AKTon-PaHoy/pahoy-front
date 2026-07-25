@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "PaHoy API",
-    "version": "1.1.0",
-    "description": "API contract generated from the currently routed Django REST Framework endpoints. The URL configuration, views, serializers, and models are the source of truth. Blog, KYC, knowledge, support, billing, and payment models exist or are planned, but no public API routes for them are currently exposed."
+    "version": "1.2.0",
+    "description": "API contract generated from the currently routed Django REST Framework endpoints. The URL configuration, views, serializers, and models are the source of truth. Collection endpoints use DRF page-number pagination with a default page size of 20. Blog, KYC, knowledge, support, billing, and payment models exist or are planned, but no public API routes for them are currently exposed."
   },
   "servers": [
     {
@@ -353,6 +353,18 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "gig_front_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
           }
         },
         "required": [
@@ -363,7 +375,8 @@
           "price",
           "is_active",
           "created_at",
-          "updated_at"
+          "updated_at",
+          "price_type"
         ]
       },
       "GigList": {
@@ -397,6 +410,18 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "gig_front_img": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
           }
         },
         "required": [
@@ -407,7 +432,8 @@
           "price",
           "is_active",
           "created_at",
-          "updated_at"
+          "updated_at",
+          "price_type"
         ]
       },
       "Contract": {
@@ -682,6 +708,350 @@
           "token",
           "user"
         ]
+      },
+      "SkillUserList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "proficiency": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "years": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              3,
+              5,
+              7
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "proficiency",
+          "years"
+        ]
+      },
+      "LoginError": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": "Field and non-field validation errors returned by the email login endpoint."
+      },
+      "PaginatedSkillList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Skill"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedSkillUserList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillUserList"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedGigList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Gig"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedGigSummaryList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GigList"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedContractList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedReviewList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Review"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedReviewSummaryList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewList"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedTalentList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TalentProfile"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      },
+      "PaginatedChatRoomList": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatRoom"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "results"
+        ]
+      }
+    },
+    "parameters": {
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "description": "Page number. Pages contain up to 20 results."
       }
     }
   },
@@ -776,7 +1146,7 @@
         "tags": [
           "Authentication"
         ],
-        "summary": "Log in and create a session",
+        "summary": "Log in with email and create a session",
         "requestBody": {
           "required": true,
           "content": {
@@ -784,16 +1154,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": {
-                    "type": "string"
-                  },
                   "password": {
                     "type": "string",
                     "format": "password"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
                   }
                 },
                 "required": [
-                  "username",
+                  "email",
                   "password"
                 ]
               }
@@ -811,37 +1182,18 @@
               }
             }
           },
-          "400": {
-            "description": "Validation or invalid filter error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationError"
-                }
-              }
-            }
-          },
           "401": {
-            "description": "Authentication required or invalid credentials",
+            "description": "Invalid email, password, inactive account, or malformed login request.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Resource not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/LoginError"
                 }
               }
             }
           }
-        }
+        },
+        "description": "Accepts an email address and password. On success, establishes the sessionid cookie and returns a token plus user data."
       }
     },
     "/api/auth/logout/": {
@@ -1215,7 +1567,8 @@
                 "type": "object",
                 "properties": {
                   "username": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "User email address. The field name is retained for token endpoint compatibility."
                   },
                   "password": {
                     "type": "string",
@@ -1271,7 +1624,8 @@
               }
             }
           }
-        }
+        },
+        "description": "The request field is named username for compatibility, but its value is the user's email because email is the User.USERNAME_FIELD."
       }
     },
     "/api/auth/token/refresh/": {
@@ -1627,18 +1981,18 @@
                 5
               ]
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Skill"
-                  }
+                  "$ref": "#/components/schemas/PaginatedSkillList"
                 }
               }
             }
@@ -1699,18 +2053,18 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Skill"
-                  }
+                  "$ref": "#/components/schemas/PaginatedSkillList"
                 }
               }
             }
@@ -2078,14 +2432,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Skill"
-                  }
+                  "$ref": "#/components/schemas/PaginatedSkillUserList"
                 }
               }
             }
@@ -2120,7 +2471,12 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          }
+        ]
       }
     },
     "/api/gigs/list/": {
@@ -2146,18 +2502,18 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Gig"
-                  }
+                  "$ref": "#/components/schemas/PaginatedGigList"
                 }
               }
             }
@@ -2559,18 +2915,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Gig"
-                  }
+                  "$ref": "#/components/schemas/PaginatedGigList"
                 }
               }
             }
@@ -2634,18 +2990,18 @@
                 "false"
               ]
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GigList"
-                  }
+                  "$ref": "#/components/schemas/PaginatedGigSummaryList"
                 }
               }
             }
@@ -2765,18 +3121,18 @@
               "type": "string",
               "format": "date"
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Contract"
-                  }
+                  "$ref": "#/components/schemas/PaginatedContractList"
                 }
               }
             }
@@ -3202,18 +3558,18 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Review"
-                  }
+                  "$ref": "#/components/schemas/PaginatedReviewList"
                 }
               }
             }
@@ -3471,18 +3827,18 @@
               "minimum": 1,
               "maximum": 5
             }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReviewList"
-                  }
+                  "$ref": "#/components/schemas/PaginatedReviewSummaryList"
                 }
               }
             }
@@ -3563,18 +3919,18 @@
               "default": 5
             },
             "description": "Maximum distance in km. Current view default is 5."
+          },
+          {
+            "$ref": "#/components/parameters/Page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TalentProfile"
-                  }
+                  "$ref": "#/components/schemas/PaginatedTalentList"
                 }
               }
             }
@@ -3628,14 +3984,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Paginated response with up to 20 results per page.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ChatRoom"
-                  }
+                  "$ref": "#/components/schemas/PaginatedChatRoomList"
                 }
               }
             }
@@ -3670,7 +4023,12 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          }
+        ]
       }
     },
     "/api/chat/rooms/{room_id}/messages/": {

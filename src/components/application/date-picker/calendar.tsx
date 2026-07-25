@@ -19,10 +19,18 @@ import { cx } from "@/utils/cx";
 import { CalendarCell } from "./cell";
 
 export const CalendarContextProvider = ({ children }: PropsWithChildren) => {
-    const [value, onChange] = useState<DateValue | null>(null);
+    const [value, setValue] = useState<DateValue | null>(null);
     const [focusedValue, onFocusChange] = useState<DateValue | undefined>();
 
-    return <AriaCalendarContext.Provider value={{ value, onChange, focusedValue, onFocusChange }}>{children}</AriaCalendarContext.Provider>;
+    const onChange = (val: DateValue | null | readonly DateValue[]) => {
+        if (Array.isArray(val)) {
+            setValue(val[0] ?? null);
+        } else {
+            setValue(val as DateValue | null);
+        }
+    };
+
+    return <AriaCalendarContext.Provider value={{ value, onChange: onChange as never, focusedValue, onFocusChange }}>{children}</AriaCalendarContext.Provider>;
 };
 
 interface CalendarProps extends AriaCalendarProps<DateValue> {

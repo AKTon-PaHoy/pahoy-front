@@ -17,7 +17,6 @@ import { getToken } from "@/utils/auth";
 import "@/styles/globals.css";
 
 const NAV_ROUTES = ["/home", "/search", "/contracts", "/gigs", "/profile"];
-const AUTH_ROUTES = ["/home", "/search", "/contracts", "/gigs", "/profile"];
 
 /** Splash route that auto-redirects to /home if a valid token exists */
 function SplashGuard() {

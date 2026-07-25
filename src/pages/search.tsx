@@ -167,6 +167,7 @@ export function Search() {
                         {results.map((gig) => (
                             <ServiceCard
                                 key={gig.id}
+                                gigId={gig.id}
                                 name={gig.name}
                                 providerName="Proveedor"
                                 isVerified

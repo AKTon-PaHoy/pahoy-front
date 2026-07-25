@@ -1,8 +1,11 @@
 import { Star01 } from "@untitledui/icons";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/base/buttons/button";
 
 export interface ServiceCardProps {
+    /** Gig ID for navigation */
+    gigId?: string;
     /** Service/gig name */
     name: string;
     /** Rating value (e.g., 4.8) */
@@ -22,6 +25,7 @@ export interface ServiceCardProps {
 }
 
 export function ServiceCard({
+    gigId,
     name,
     rating,
     reviewCount,
@@ -31,6 +35,16 @@ export function ServiceCard({
     imageUrl,
     onViewMore,
 }: ServiceCardProps) {
+    const navigate = useNavigate();
+
+    const handleViewMore = () => {
+        if (onViewMore) {
+            onViewMore();
+        } else if (gigId) {
+            navigate(`/gig/${gigId}`);
+        }
+    };
+
     return (
         <div className="flex gap-3 rounded-2xl border border-neutral-200 bg-white p-3 shadow-xs">
             {/* Image */}
@@ -90,7 +104,7 @@ export function ServiceCard({
                     <Button
                         color="primary"
                         size="xs"
-                        onClick={onViewMore}
+                        onClick={handleViewMore}
                     >
                         Ver más
                     </Button>

@@ -4,6 +4,7 @@ import { AnimatePresence } from "motion/react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router";
 import { BottomNavigation } from "@/components/application/bottom-navigation/bottom-navigation";
 import { PageTransition } from "@/components/application/page-transition/page-transition";
+import { GigOverview } from "@/pages/gig-overview";
 import { HomeScreen } from "@/pages/home-screen";
 import { Login } from "@/pages/login";
 import { NotFound } from "@/pages/not-found";
@@ -60,6 +61,7 @@ function AnimatedRoutes() {
                     <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
                     <Route path="/home" element={<RequireAuth><PageTransition><HomeScreen /></PageTransition></RequireAuth>} />
                     <Route path="/search" element={<RequireAuth><PageTransition><Search /></PageTransition></RequireAuth>} />
+                    <Route path="/gig/:id" element={<RequireAuth><PageTransition><GigOverview /></PageTransition></RequireAuth>} />
                     <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
                 </Routes>
             </AnimatePresence>

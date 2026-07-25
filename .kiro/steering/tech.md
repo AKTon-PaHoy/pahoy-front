@@ -2,9 +2,10 @@
 
 ## Core Framework & Language
 
-- **React 19.2.4** - Latest React with concurrent rendering
-- **TypeScript 5.9.3** - Type-safe development
-- **React Router 7.13.0** - Client-side routing
+- **Untitled UI** - Docs are at: https://www.untitledui.com/react/docs/introduction
+    - **React 19.2.4** - Latest React with concurrent rendering
+    - **TypeScript 5.9.3** - Type-safe development
+    - **React Router 7.13.0** - Client-side routing
 
 ## Build & Development
 
@@ -82,3 +83,11 @@ Uses **npm** with `npm` for dependency management (lock file: `package-lock.json
 - **Highly Responsive** - All components adapt seamlessly across screen sizes
 - **TypeScript-First** - Strong typing throughout the codebase
 - **Accessibility-First** - Built on React Aria for WCAG compliance
+
+## Theming
+
+To adjust theme brand colors, change "--color-brand-*" on `src/styles/theme.css`
+
+Do not atempt to modify any other styles, use existent styles to comply with the designs requested.
+
+Always do a final visual validation against provided screenshot using playwright MCP.

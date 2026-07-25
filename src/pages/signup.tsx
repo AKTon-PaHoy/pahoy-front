@@ -51,7 +51,7 @@ export function Signup() {
 
         setIsSubmitting(true);
         try {
-            const data = await api("/api/auth/register/", {
+            const data = await api<{ token: string }>("/api/auth/register/", {
                 method: "POST",
                 body: {
                     username: username.trim(),

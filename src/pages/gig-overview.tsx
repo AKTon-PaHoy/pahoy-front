@@ -14,8 +14,9 @@ import { useNavigate, useParams } from "react-router";
 
 import { Carousel } from "@/components/application/carousel/carousel-base";
 import { Button } from "@/components/base/buttons/button";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { useReverseGeocode } from "@/hooks/use-reverse-geocode";
-import { api } from "@/utils/api";
+import { api, ApiError } from "@/utils/api";
 import { formatCoordinates, fromGeoJSON } from "@/utils/coordinates";
 
 // --- Types ---
@@ -62,12 +63,17 @@ interface Review {
 export function GigOverview() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
+    const { user: currentUser, isLoading: isLoadingUser } = useCurrentUser();
 
     const [gig, setGig] = useState<Gig | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    // Room creation state
+    const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+    const [roomCreationError, setRoomCreationError] = useState<string | null>(null);
 
     const fetchGig = useCallback(async () => {
         if (!id) return;
@@ -89,6 +95,53 @@ export function GigOverview() {
     useEffect(() => {
         fetchGig();
     }, [fetchGig]);
+
+    // Handle "Chatear" button tap to create room
+    const handleCreateRoom = useCallback(async () => {
+        if (!id || isCreatingRoom) return;
+
+        setIsCreatingRoom(true);
+        setRoomCreationError(null);
+
+        const timeoutId = setTimeout(() => {
+            if (isCreatingRoom) {
+                setIsCreatingRoom(false);
+                setRoomCreationError("Tiempo de espera agotado. Intenta de nuevo.");
+            }
+        }, 15000); // 15-second timeout
+
+        try {
+            interface ChatRoom {
+                id: string;
+            }
+
+            const room = await api<ChatRoom>("/api/chat/rooms/create/", {
+                method: "POST",
+                body: { gig: id },
+            });
+
+            clearTimeout(timeoutId);
+
+            // Navigate to conversation view
+            if (room && room.id) {
+                navigate(`/messages/${room.id}`);
+            }
+        } catch (err) {
+            clearTimeout(timeoutId);
+            setIsCreatingRoom(false);
+
+            if (err instanceof ApiError) {
+                if (err.status === 400) {
+                    setRoomCreationError("No se pudo crear la sala de chat. Intenta de nuevo.");
+                } else {
+                    // Network or 5xx error
+                    setRoomCreationError("Error de conexión. Intenta de nuevo.");
+                }
+            } else {
+                setRoomCreationError("Error de conexión. Intenta de nuevo.");
+            }
+        }
+    }, [id, isCreatingRoom, navigate]);
 
     // Collect all images for the carousel
     const images: string[] = [];
@@ -317,13 +370,72 @@ export function GigOverview() {
                 <div className="h-24" />
             </motion.div>
 
-            {/* Fixed Bottom CTA */}
+            {/* Fixed Bottom CTA - Always visible */}
             <div className="fixed inset-x-0 bottom-0 z-20 bg-white px-4 pt-3 pb-safe">
                 <div className="pb-4">
-                    <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 py-4 text-white shadow-sm active:bg-brand-700">
-                        <MessageChatCircle className="size-5" />
-                        <span className="text-base font-semibold">Chatear</span>
+                    <button
+                        onClick={() => {
+                            if (!currentUser) {
+                                // User not logged in: navigate to login
+                                navigate("/login");
+                            } else if (currentUser.id === gig.talent) {
+                                // User is gig owner: button is disabled, do nothing
+                            } else {
+                                // User is logged in and not owner: create chat room
+                                handleCreateRoom();
+                            }
+                        }}
+                        disabled={
+                            isLoadingUser ||
+                            isCreatingRoom ||
+                            (currentUser ? currentUser.id === gig.talent : false)
+                        }
+                        className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 shadow-sm transition-colors ${
+                            isLoadingUser || !currentUser || currentUser.id === gig.talent
+                                ? "cursor-not-allowed bg-neutral-200 text-neutral-600"
+                                : isCreatingRoom
+                                  ? "cursor-wait bg-brand-600/80 text-white"
+                                  : "active:bg-brand-700 bg-brand-600 text-white"
+                        }`}
+                    >
+                        {isLoadingUser ? (
+                            <>
+                                <div className="size-5 animate-spin rounded-full border-2 border-neutral-600/30 border-t-neutral-600" />
+                                <span className="text-base font-semibold">Cargando...</span>
+                            </>
+                        ) : isCreatingRoom ? (
+                            <>
+                                <div className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                                <span className="text-base font-semibold">Creando sala...</span>
+                            </>
+                        ) : !currentUser ? (
+                            <>
+                                <MessageChatCircle className="size-5" />
+                                <span className="text-base font-semibold">
+                                    Inicia sesión para chatear
+                                </span>
+                            </>
+                        ) : currentUser.id === gig.talent ? (
+                            <>
+                                <MessageChatCircle className="size-5" />
+                                <span className="text-base font-semibold">
+                                    No puedes chatear contigo mismo
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                <MessageChatCircle className="size-5" />
+                                <span className="text-base font-semibold">Chatear</span>
+                            </>
+                        )}
                     </button>
+
+                    {/* Error message */}
+                    {roomCreationError && (
+                        <p className="mt-3 text-center text-sm text-error-primary">
+                            {roomCreationError}
+                        </p>
+                    )}
                 </div>
             </div>
 

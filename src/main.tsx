@@ -6,6 +6,8 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-route
 import { BottomNavigation } from "@/components/application/bottom-navigation/bottom-navigation";
 import { PageTransition } from "@/components/application/page-transition/page-transition";
 import { ChambasScreen } from "@/pages/chambas-screen";
+import { ChatList } from "@/pages/chat-list";
+import { ChatConversation } from "@/pages/chat-conversation";
 import { CompleteProfile } from "@/pages/complete-profile";
 import { GigOverview } from "@/pages/gig-overview";
 import { HomeScreen } from "@/pages/home-screen";
@@ -27,7 +29,12 @@ import { getToken } from "@/utils/auth";
 import "@/styles/globals.css";
 
 const NAV_ROUTES = ["/home", "/search", "/contracts", "/messages", "/profile", "/gigs"];
-const NO_NAV_ROUTES = ["/gigs/new", "/profile/edit", "/profile/change-email"];
+const NO_NAV_ROUTES = ["/gigs/new", "/profile/edit", "/profile/change-email", "/messages/"];
+
+/** Check if a path should have navigation hidden */
+function shouldHideNav(pathname: string): boolean {
+    return NO_NAV_ROUTES.some((r) => pathname.startsWith(r)) && pathname !== "/messages";
+}
 
 /** Splash route that auto-redirects to /home if a valid token exists */
 function SplashGuard() {
@@ -82,7 +89,7 @@ function RequireOnboarding({ children }: { children: React.ReactNode }) {
 
 function AnimatedRoutes() {
     const location = useLocation();
-    const showNav = NAV_ROUTES.some((r) => location.pathname.startsWith(r)) && !NO_NAV_ROUTES.some((r) => location.pathname.startsWith(r));
+    const showNav = NAV_ROUTES.some((r) => location.pathname.startsWith(r)) && !shouldHideNav(location.pathname);
 
     return (
         <>
@@ -97,6 +104,8 @@ function AnimatedRoutes() {
                     <Route path="/complete-profile" element={<RequireAuth><PageTransition><CompleteProfile /></PageTransition></RequireAuth>} />
                     <Route path="/gigs" element={<RequireAuth><RequireOnboarding><PageTransition><ChambasScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/gigs/new" element={<RequireAuth><RequireOnboarding><PageTransition><NuevaChambaScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/messages" element={<RequireAuth><RequireOnboarding><PageTransition><ChatList /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/messages/:roomId" element={<RequireAuth><RequireOnboarding><PageTransition><ChatConversation /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile" element={<RequireAuth><RequireOnboarding><PageTransition><Profile /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile/change-password" element={<RequireAuth><PageTransition><ChangePassword /></PageTransition></RequireAuth>} />
                     <Route path="/profile/edit" element={<RequireAuth><RequireOnboarding><PageTransition><ProfileEdit /></PageTransition></RequireOnboarding></RequireAuth>} />

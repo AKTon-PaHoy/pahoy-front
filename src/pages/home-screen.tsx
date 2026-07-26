@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { ServiceCard } from "@/components/application/service-card/service-card";
 import { useReverseGeocode } from "@/hooks/use-reverse-geocode";
 import { api } from "@/utils/api";
-import { fromGeoJSON } from "@/utils/coordinates";
+import { formatCoordinates, fromGeoJSON } from "@/utils/coordinates";
 
 interface Gig {
     id: string;
@@ -40,7 +40,7 @@ export const HomeScreen = () => {
     const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
     const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
 
-    const { address: fullAddress } = useReverseGeocode(coordinates);
+    const { address: fullAddress, error: geocodeError } = useReverseGeocode(coordinates);
 
     // Show a compact location: skip the street (index 0), pick 2 distinct segments
     const shortAddress = (() => {
@@ -53,6 +53,8 @@ export const HomeScreen = () => {
         });
         return candidates.slice(0, 2).join(", ") || parts.slice(0, 2).join(", ");
     })();
+
+    const displayLocation = shortAddress ?? (geocodeError && coordinates ? formatCoordinates(coordinates.latitude, coordinates.longitude) : null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -90,7 +92,7 @@ export const HomeScreen = () => {
                         </h1>
                         <div className="mt-1 flex items-center gap-1 text-sm text-tertiary">
                             <MarkerPin01 className="size-4" />
-                            <span>{shortAddress || "Obteniendo ubicación..."}</span>
+                            <span>{displayLocation || "Obteniendo ubicación..."}</span>
                         </div>
                     </div>
                     {/* Avatar — navigates to profile */}

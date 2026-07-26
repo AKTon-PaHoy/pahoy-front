@@ -8,6 +8,8 @@ interface UseReverseGeocodeResult {
 
 // Simple in-memory cache to avoid repeated requests for the same coordinates
 const geocodeCache = new Map<string, string>();
+// Cache of coordinate keys that have previously failed geocoding — prevents retries
+const geocodeFailureCache = new Set<string>();
 
 /**
  * Custom hook for reverse geocoding using Nominatim API.
@@ -44,6 +46,12 @@ export function useReverseGeocode(
             return;
         }
 
+        // Check failure cache - don't retry previously failed coordinates
+        if (geocodeFailureCache.has(cacheKey)) {
+            setError(true);
+            return;
+        }
+
         // AbortController to handle rapid coordinate changes
         const abortController = new AbortController();
 
@@ -74,6 +82,7 @@ export function useReverseGeocode(
                     setAddress(data.display_name);
                 } else {
                     setError(true);
+                    geocodeFailureCache.add(cacheKey);
                 }
             } catch (err) {
                 // Ignore abort errors (expected when coordinates change)
@@ -82,6 +91,7 @@ export function useReverseGeocode(
                 }
 
                 setError(true);
+                geocodeFailureCache.add(cacheKey);
             } finally {
                 setIsLoading(false);
             }

@@ -1,0 +1,166 @@
+{
+  "pbtResults": {
+    "1. Write bug condition exploration test": {
+      "status": "passed",
+      "failingExample": "Counterexamples proving the bug exists:\n\n1. Hook retries failed requests (no failure cache):\n   - Test: \"should NOT retry fetch for the same coordinates after a failed response on re-render\"\n   - Expected: fetchMock called 0 times after re-render with same coords\n   - Actual: fetchMock called 1 time — hook makes a 2nd fetch for coordinates (-12.0553, -77.0311) that already failed with HTTP 429\n\n2. Hook retries on re-render (no failure cache):\n   - Test: \"should set error: true immediately for previously-failed coordinates without fetching\"\n   - Expected: fetchMock called 0 times, error stays true\n   - Actual: fetchMock called 1 time — hook re-runs the effect because coordinates object reference changed and there's no failure cache\n\n3. HomeScreen shows blank on geocode error:\n   - Test: \"HomeScreen should display formatted coordinates when reverse geocoding fails\"\n   - Expected: rendered text includes \"-12.0553, -77.0311\"\n   - Actual: false — HomeScreen only destructures { address: fullAddress } and does NOT check error state, showing \"Obteniendo ubicación...\" instead of formatted coordinates\n\n4. GigOverview TalentCard shows blank on geocode error:\n   - Test: \"GigOverview TalentCard should display formatted coordinates when reverse geocoding fails\"\n   - Expected: rendered text includes \"-12.0553, -77.0311\"\n   - Actual: false — TalentCard only destructures { address } and does NOT check error state, showing \"Cerca de ti\" instead of formatted coordinates",
+      "lastRunTimestamp": 1785038616859
+    },
+    "2. Write preservation property tests (BEFORE implementing fix)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785038731292
+    },
+    "3.4 Verify bug condition exploration test now passes": {
+      "status": "passed",
+      "lastRunTimestamp": 1785039040442
+    },
+    "3.5 Verify preservation tests still pass": {
+      "status": "passed",
+      "lastRunTimestamp": 1785039077998
+    }
+  },
+  "executionHistory": {
+    "1. Write bug condition exploration test": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038327964
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038335841
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038634523
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038327998
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038641689
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038743601
+      }
+    ],
+    "3.1 Add `geocodeFailureCache` to `src/hooks/use-reverse-geocode.ts`": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038328027
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038751253
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038825814
+      }
+    ],
+    "3.2 Update `src/pages/home-screen.tsx` with fallback display": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038328058
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038833679
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038916211
+      }
+    ],
+    "3.3 Update `src/pages/gig-overview.tsx` TalentCard with fallback display": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038328093
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038921680
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038998181
+      }
+    ],
+    "3.4 Verify bug condition exploration test now passes": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038328144
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785039004191
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785039053234
+      }
+    ],
+    "3.5 Verify preservation tests still pass": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038328198
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785039057746
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785039091594
+      }
+    ],
+    "4. Checkpoint - Ensure all tests pass and build succeeds": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785038328232
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785039096909
+      },
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785039187568
+      }
+    ],
+    "3. Fix reverse geocode failure handling and consumer fallback": [
+      {
+        "executionId": "5b022a96-2692-4556-8447-8a9b187d1a07",
+        "chatSessionId": "sess_b21be6b8-e065-4cda-a61f-611a7e8869a3",
+        "timestamp": 1785039091624
+      }
+    ]
+  }
+}

@@ -1,5 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { registerSW } from "virtual:pwa-register";
 import { AnimatePresence } from "motion/react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router";
 import { BottomNavigation } from "@/components/application/bottom-navigation/bottom-navigation";
@@ -16,6 +17,7 @@ import { Signup } from "@/pages/signup";
 import { Splash } from "@/pages/splash";
 import { Profile } from "@/pages/profile";
 import { ChangePassword } from "@/pages/change-password";
+import { OfflineIndicator } from "@/components/application/offline-indicator/offline-indicator";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { api, validateToken } from "@/utils/api";
@@ -108,6 +110,7 @@ createRoot(document.getElementById("root")!).render(
         <ThemeProvider>
             <BrowserRouter>
                 <RouteProvider>
+                    <OfflineIndicator />
                     <div className="mx-auto max-w-[750px]">
                         <AnimatedRoutes />
                     </div>
@@ -116,3 +119,16 @@ createRoot(document.getElementById("root")!).render(
         </ThemeProvider>
     </StrictMode>,
 );
+
+registerSW({
+    onRegisteredSW(swUrl) {
+        if (import.meta.env.DEV) {
+            console.log("[SW] Registered:", swUrl);
+        }
+    },
+    onRegisterError(error) {
+        if (import.meta.env.DEV) {
+            console.error("[SW] Registration failed:", error);
+        }
+    },
+});

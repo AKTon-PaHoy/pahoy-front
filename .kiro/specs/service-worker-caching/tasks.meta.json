@@ -1,0 +1,213 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Install `vite-plugin-pwa` as a dev dependency": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025645
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037036929
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037093213
+      }
+    ],
+    "1.2 Configure VitePWA plugin in `vite.config.ts`": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025674
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037097274
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037358825
+      }
+    ],
+    "1.3 Create PWA icon files": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025721
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037097990
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037359524
+      }
+    ],
+    "1.4 Add TypeScript declarations for virtual module": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025786
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037098788
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037360218
+      }
+    ],
+    "2.1 Register the service worker in `src/main.tsx`": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025816
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037365197
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037450590
+      }
+    ],
+    "2.2 Add `clearApiCache()` to `src/utils/auth.ts`": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025845
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037366003
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037451482
+      }
+    ],
+    "2.3 Update 401 handler in `src/utils/api.ts` to await cache clearing": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025873
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037366797
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037452502
+      }
+    ],
+    "3.1 Create `src/hooks/use-online-status.ts`": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025904
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037367549
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037453270
+      }
+    ],
+    "3.2 Create `src/components/application/offline-indicator/offline-indicator.tsx`": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025935
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037457143
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037504086
+      }
+    ],
+    "3.3 Render `<OfflineIndicator />` in `src/main.tsx`": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025964
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037508460
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037560132
+      }
+    ],
+    "4. Build verification checkpoint": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037025996
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037564135
+      },
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037616984
+      }
+    ],
+    "1. Install vite-plugin-pwa and configure Vite": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037360273
+      }
+    ],
+    "2. Register service worker and integrate cache invalidation": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037452532
+      }
+    ],
+    "3. Implement offline connectivity indicator": [
+      {
+        "executionId": "0d115479-e59f-424c-b84f-be3923ad255f",
+        "chatSessionId": "sess_16a70b26-5552-4f03-ac84-879acb55f27e",
+        "timestamp": 1785037560261
+      }
+    ]
+  }
+}

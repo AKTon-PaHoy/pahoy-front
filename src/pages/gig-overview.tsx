@@ -15,7 +15,7 @@ import { Carousel } from "@/components/application/carousel/carousel-base";
 import { Button } from "@/components/base/buttons/button";
 import { useReverseGeocode } from "@/hooks/use-reverse-geocode";
 import { api } from "@/utils/api";
-import { fromGeoJSON } from "@/utils/coordinates";
+import { formatCoordinates, fromGeoJSON } from "@/utils/coordinates";
 
 // --- Types ---
 
@@ -328,7 +328,7 @@ function TalentCard({ talentInfo }: { talentInfo: TalentInfo }) {
         .join(" ") || "Talento verificado";
 
     const coordinates = fromGeoJSON(talentInfo.location);
-    const { address } = useReverseGeocode(coordinates);
+    const { address, error: geocodeError } = useReverseGeocode(coordinates);
 
     // Show a compact location: pick 2 relevant segments
     const shortAddress = (() => {
@@ -341,6 +341,8 @@ function TalentCard({ talentInfo }: { talentInfo: TalentInfo }) {
         });
         return candidates.slice(0, 2).join(", ") || parts.slice(0, 2).join(", ");
     })();
+
+    const displayLocation = shortAddress ?? (geocodeError && coordinates ? formatCoordinates(coordinates.latitude, coordinates.longitude) : null);
 
     return (
         <div className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
@@ -368,7 +370,7 @@ function TalentCard({ talentInfo }: { talentInfo: TalentInfo }) {
                 )}
                 <div className="mt-1 flex items-center gap-1 text-xs text-tertiary">
                     <MarkerPin01 className="size-3 text-brand-600" />
-                    <span>{shortAddress || "Cerca de ti"}</span>
+                    <span>{displayLocation || "Cerca de ti"}</span>
                 </div>
             </div>
         </div>

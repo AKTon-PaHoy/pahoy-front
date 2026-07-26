@@ -1,4 +1,4 @@
-import { clearToken, getToken } from "@/utils/auth";
+import { clearApiCache, clearToken, getToken } from "@/utils/auth";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -73,6 +73,7 @@ export async function api<T>(
     // If 401 and we had a token, it's expired — clear and redirect to splash
     if (res.status === 401 && getToken()) {
         clearToken();
+        await clearApiCache();
         window.location.href = "/";
     }
 
@@ -125,6 +126,7 @@ export async function apiMultipart<T>(
     // If 401 and we had a token, it's expired — clear and redirect to splash
     if (res.status === 401 && getToken()) {
         clearToken();
+        await clearApiCache();
         window.location.href = "/";
     }
 

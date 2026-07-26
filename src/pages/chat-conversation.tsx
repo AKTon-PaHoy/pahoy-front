@@ -6,6 +6,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useChatRooms } from "@/hooks/use-chat-rooms";
 import { MessageBubble } from "@/components/application/chat/message-bubble";
 import { ContractCard } from "@/components/application/chat/contract-card";
+import { ContractProposalModal } from "@/components/application/chat/contract-proposal-modal";
 import { ChatInput } from "@/components/application/chat/chat-input";
 import { LoadingIndicator } from "@/components/application/loading-indicator/loading-indicator";
 import { api, ApiError } from "@/utils/api";
@@ -33,6 +34,9 @@ export function ChatConversation() {
   // State for gig details
   const [gig, setGig] = useState<Gig | null>(null);
   const [isLoadingGig, setIsLoadingGig] = useState(false);
+
+  // State for contract proposal modal
+  const [isContractModalOpen, setIsContractModalOpen] = useState(false);
 
   // Fetch messages and handle polling
   const {
@@ -300,8 +304,28 @@ export function ChatConversation() {
           isSending={isSending}
           sendError={sendError}
           isGigOwner={isGigOwner}
+          onSendContract={() => setIsContractModalOpen(true)}
         />
       </div>
+
+      {/* Contract Proposal Modal */}
+      {gig && (
+        <ContractProposalModal
+          isOpen={isContractModalOpen}
+          onClose={() => setIsContractModalOpen(false)}
+          onSuccess={() => {
+            setIsContractModalOpen(false);
+            // Message will appear on next poll cycle from useChatMessages
+          }}
+          roomId={roomId!}
+          gig={{
+            id: gig.id,
+            name: gig.name,
+            price: gig.price,
+            price_type: gig.price_type,
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -1,0 +1,277 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Add contract routes to `src/main.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095748963
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095761002
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095910981
+      }
+    ],
+    "1.2 Add contract-related TypeScript types to `src/types/chat.ts`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749021
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095761695
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095911737
+      }
+    ],
+    "2.1 Create `src/hooks/use-contracts-list.ts`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749071
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095923865
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096035064
+      }
+    ],
+    "2.2 Create `src/hooks/use-contract-detail.ts`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749133
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095924622
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096035724
+      }
+    ],
+    "3. Checkpoint - Ensure hooks compile and types are correct": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749169
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096051413
+      }
+    ],
+    "4.1 Create `src/components/application/chat/contract-proposal-modal.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749217
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096052108
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096246716
+      }
+    ],
+    "5.1 Update `src/components/application/chat/chat-input.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749271
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096291278
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096510853
+      }
+    ],
+    "5.2 Update `src/components/application/chat/contract-card.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749313
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096291947
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096511531
+      }
+    ],
+    "5.3 Integrate ContractProposalModal in `src/pages/chat-conversation.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749354
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096523289
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096652083
+      }
+    ],
+    "6. Checkpoint - Verify chat integration works end-to-end": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749392
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096662938
+      }
+    ],
+    "7.1 Create `src/pages/contracts-list.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749438
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096686190
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785097029951
+      }
+    ],
+    "8.1 Create `src/pages/contract-confirmation.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749486
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096686949
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785097030675
+      }
+    ],
+    "9.1 Create `src/pages/contract-detail.tsx`": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749527
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096687573
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785097031494
+      }
+    ],
+    "10. Final checkpoint - Full integration verification": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095749601
+      },
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785097036855
+      }
+    ],
+    "1. Routing, navigation, and type foundations": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785095911792
+      }
+    ],
+    "2. Custom hooks for data fetching": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096035784
+      }
+    ],
+    "4. Contract Proposal Modal": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096246778
+      }
+    ],
+    "5. Enhanced ChatInput and ContractCard components": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785096652162
+      }
+    ],
+    "7. Contracts List Page": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785097030044
+      }
+    ],
+    "8. Contract Confirmation Page": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785097030744
+      }
+    ],
+    "9. Contract Detail Page": [
+      {
+        "executionId": "7fcd0223-b98b-4802-a695-ab8bc3dc3a62",
+        "chatSessionId": "sess_cf0fe6b1-1400-4af0-b307-79c5a8f979af",
+        "timestamp": 1785097031547
+      }
+    ]
+  }
+}

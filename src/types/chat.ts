@@ -38,3 +38,40 @@ export interface PaginatedResponse<T> {
   previous: string | null;
   results: T[];
 }
+
+export interface ContractListItem extends Contract {
+  gig_name: string;
+  gig_front_image: string | null;
+  counterparty_name: string;
+  counterparty_verified: boolean;
+}
+
+export interface GigDetail {
+  id: string;
+  name: string;
+  description: string;
+  price: number | null;
+  price_type: string;
+  front_image: string | null;
+  talent: string; // UUID
+  talent_info: {
+    first_name: string;
+    last_name: string;
+    is_verified: boolean;
+    rating: number | null;
+    profile_picture: string | null;
+  };
+}
+
+export interface CreateContractPayload {
+  gig: string; // UUID
+  price: number;
+  price_type: "Fijo" | "Horas";
+}
+
+export const CONTRACT_TIMELINE_STEPS = [
+  { key: "Propuesta", label: "Propuesta enviada" },
+  { key: "Activo", label: "Contrato activo" },
+  { key: "Confirmado", label: "Trabajo confirmado" },
+  { key: "Concluido", label: "Concluido" },
+] as const;

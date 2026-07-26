@@ -9,6 +9,7 @@ export interface ChatInputProps {
   isSending: boolean;
   sendError: string | null;
   isGigOwner: boolean; // shows "Send Contract" placeholder button
+  onSendContract?: () => void; // triggers proposal modal
 }
 
 const CHARACTER_LIMIT = 10000;
@@ -19,6 +20,7 @@ export function ChatInput({
   isSending,
   sendError,
   isGigOwner,
+  onSendContract,
 }: ChatInputProps) {
   const [content, setContent] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -96,7 +98,7 @@ export function ChatInput({
       {isGigOwner && (
         <Button
           type="button"
-          disabled
+          onClick={() => onSendContract?.()}
           size="sm"
           color="secondary"
           className="w-full"

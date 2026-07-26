@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { FileCode01 } from "@untitledui/icons";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
@@ -45,6 +46,22 @@ export function ContractCard({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const formattedTime = formatMessageTimestamp(timestamp);
+  const navigate = useNavigate();
+
+  const fetchContract = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await api<Contract>(
+        `/api/contracts/retrieve/${contractId}/`,
+      );
+      setContract(data);
+    } catch {
+      setError("Detalles del contrato no disponibles");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [contractId]);
 
   useEffect(() => {
     // If this is talent's own message, don't fetch contract details
@@ -54,23 +71,8 @@ export function ContractCard({
     }
 
     // Fetch contract details only if client is viewing
-    const fetchContract = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await api<Contract>(
-          `/api/contracts/retrieve/${contractId}/`,
-        );
-        setContract(data);
-      } catch {
-        setError("Detalles del contrato no disponibles");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchContract();
-  }, [contractId, isClient, isOwnMessage]);
+  }, [contractId, isClient, isOwnMessage, fetchContract]);
 
   // Talent sent it: render "Contrato enviado" in brand-red, right-aligned
   if (isOwnMessage && !isClient) {
@@ -114,7 +116,18 @@ export function ContractCard({
 
         {/* Error state */}
         {error && !isLoading && (
-          <div className="text-sm text-tertiary">{error}</div>
+          <div className="flex flex-col gap-2">
+            <div className="text-sm text-tertiary">{error}</div>
+            <Button
+              type="button"
+              color="secondary"
+              size="sm"
+              className="w-full text-sm"
+              onClick={fetchContract}
+            >
+              Reintentar
+            </Button>
+          </div>
         )}
 
         {/* Contract details */}
@@ -130,11 +143,15 @@ export function ContractCard({
             {/* Price and type */}
             <div className="flex items-baseline gap-1">
               <span className="text-lg font-bold text-primary">
-                ${contract.price.toLocaleString()}
+                {contract.price !== null
+                  ? `$${contract.price.toLocaleString()}`
+                  : "Precio no definido"}
               </span>
-              <span className="text-xs text-tertiary">
-                {contract.price_type === "Horas" ? "por hora" : "por servicio"}
-              </span>
+              {contract.price !== null && (
+                <span className="text-xs text-tertiary">
+                  {contract.price_type === "Horas" ? "por hora" : "por servicio"}
+                </span>
+              )}
             </div>
 
             {/* Status badge */}
@@ -155,7 +172,10 @@ export function ContractCard({
                 color="secondary"
                 size="md"
                 className="w-full text-sm"
-                disabled
+                isDisabled={contract.status !== "Propuesta"}
+                onClick={() =>
+                  navigate(`/contracts/${contractId}/confirm`)
+                }
               >
                 Ver contrato
               </Button>

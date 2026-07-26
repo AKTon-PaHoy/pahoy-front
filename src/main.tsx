@@ -21,6 +21,9 @@ import { Profile } from "@/pages/profile";
 import { ProfileEdit } from "@/pages/profile-edit";
 import { ChangeEmail } from "@/pages/change-email";
 import { ChangePassword } from "@/pages/change-password";
+import { ContractsListPage } from "@/pages/contracts-list";
+import { ContractConfirmationPage } from "@/pages/contract-confirmation";
+import { ContractDetailPage } from "@/pages/contract-detail";
 import { OfflineIndicator } from "@/components/application/offline-indicator/offline-indicator";
 import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -29,7 +32,7 @@ import { getToken } from "@/utils/auth";
 import "@/styles/globals.css";
 
 const NAV_ROUTES = ["/home", "/search", "/contracts", "/messages", "/profile", "/gigs"];
-const NO_NAV_ROUTES = ["/gigs/new", "/profile/edit", "/profile/change-email", "/messages/"];
+const NO_NAV_ROUTES = ["/gigs/new", "/profile/edit", "/profile/change-email", "/messages/", "/contracts/"];
 
 /** Check if a path should have navigation hidden */
 function shouldHideNav(pathname: string): boolean {
@@ -106,6 +109,9 @@ function AnimatedRoutes() {
                     <Route path="/gigs/new" element={<RequireAuth><RequireOnboarding><PageTransition><NuevaChambaScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/messages" element={<RequireAuth><RequireOnboarding><PageTransition><ChatList /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/messages/:roomId" element={<RequireAuth><RequireOnboarding><PageTransition><ChatConversation /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/contracts" element={<RequireAuth><RequireOnboarding><PageTransition><ContractsListPage /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/contracts/:contractId" element={<RequireAuth><RequireOnboarding><PageTransition><ContractDetailPage /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/contracts/:contractId/confirm" element={<RequireAuth><RequireOnboarding><PageTransition><ContractConfirmationPage /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile" element={<RequireAuth><RequireOnboarding><PageTransition><Profile /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile/change-password" element={<RequireAuth><PageTransition><ChangePassword /></PageTransition></RequireAuth>} />
                     <Route path="/profile/edit" element={<RequireAuth><RequireOnboarding><PageTransition><ProfileEdit /></PageTransition></RequireOnboarding></RequireAuth>} />

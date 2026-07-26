@@ -7,8 +7,9 @@ import {
     ShieldTick,
     MessageChatCircle,
     MarkerPin01,
+    XClose,
 } from "@untitledui/icons";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useNavigate, useParams } from "react-router";
 
 import { Carousel } from "@/components/application/carousel/carousel-base";
@@ -23,6 +24,7 @@ interface TalentInfo {
     first_name: string | null;
     last_name: string | null;
     bio: string | null;
+    profile_pic: string | null;
     location: { type: string; coordinates: [number, number] } | null;
 }
 
@@ -65,6 +67,7 @@ export function GigOverview() {
     const [reviews, setReviews] = useState<Review[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const fetchGig = useCallback(async () => {
         if (!id) return;
@@ -162,11 +165,18 @@ export function GigOverview() {
                             <Carousel.Content className="h-56">
                                 {images.map((img, idx) => (
                                     <Carousel.Item key={idx} className="h-56">
-                                        <img
-                                            src={img}
-                                            alt={`${gig.name} - imagen ${idx + 1}`}
-                                            className="size-full object-cover"
-                                        />
+                                        <button
+                                            type="button"
+                                            className="size-full cursor-zoom-in"
+                                            onClick={() => setLightboxIndex(idx)}
+                                            aria-label={`Ver imagen ${idx + 1} en pantalla completa`}
+                                        >
+                                            <img
+                                                src={img}
+                                                alt={`${gig.name} - imagen ${idx + 1}`}
+                                                className="size-full object-cover"
+                                            />
+                                        </button>
                                     </Carousel.Item>
                                 ))}
                             </Carousel.Content>
@@ -316,7 +326,135 @@ export function GigOverview() {
                     </button>
                 </div>
             </div>
+
+            {/* Fullscreen Lightbox */}
+            <ImageLightbox
+                images={images}
+                initialIndex={lightboxIndex}
+                onClose={() => setLightboxIndex(null)}
+            />
         </div>
+    );
+}
+
+// --- Image Lightbox Sub-component ---
+
+function ImageLightbox({
+    images,
+    initialIndex,
+    onClose,
+}: {
+    images: string[];
+    initialIndex: number | null;
+    onClose: () => void;
+}) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        if (initialIndex !== null) {
+            setCurrentIndex(initialIndex);
+        }
+    }, [initialIndex]);
+
+    // Lock body scroll when lightbox is open
+    useEffect(() => {
+        if (initialIndex !== null) {
+            document.body.style.overflow = "hidden";
+            return () => {
+                document.body.style.overflow = "";
+            };
+        }
+    }, [initialIndex]);
+
+    // Keyboard navigation
+    useEffect(() => {
+        if (initialIndex === null) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") onClose();
+            if (e.key === "ArrowLeft") setCurrentIndex((i) => (i - 1 + images.length) % images.length);
+            if (e.key === "ArrowRight") setCurrentIndex((i) => (i + 1) % images.length);
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [initialIndex, images.length, onClose]);
+
+    return (
+        <AnimatePresence>
+            {initialIndex !== null && (
+                <motion.div
+                    className="fixed inset-0 z-50 flex flex-col bg-black"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-4 pt-4 pb-2">
+                        <span className="text-sm text-white/70">
+                            {currentIndex + 1} / {images.length}
+                        </span>
+                        <button
+                            onClick={onClose}
+                            className="flex size-10 items-center justify-center rounded-full text-white"
+                            aria-label="Cerrar"
+                        >
+                            <XClose className="size-6" />
+                        </button>
+                    </div>
+
+                    {/* Image */}
+                    <div className="flex flex-1 items-center justify-center px-4">
+                        <motion.img
+                            key={currentIndex}
+                            src={images[currentIndex]}
+                            alt={`Imagen ${currentIndex + 1}`}
+                            className="max-h-full max-w-full object-contain"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.2 }}
+                        />
+                    </div>
+
+                    {/* Navigation arrows */}
+                    {images.length > 1 && (
+                        <>
+                            <button
+                                onClick={() => setCurrentIndex((i) => (i - 1 + images.length) % images.length)}
+                                className="absolute left-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm"
+                                aria-label="Imagen anterior"
+                            >
+                                <ChevronLeft className="size-5" />
+                            </button>
+                            <button
+                                onClick={() => setCurrentIndex((i) => (i + 1) % images.length)}
+                                className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm"
+                                aria-label="Imagen siguiente"
+                            >
+                                <ChevronRight className="size-5" />
+                            </button>
+                        </>
+                    )}
+
+                    {/* Dots */}
+                    {images.length > 1 && (
+                        <div className="flex justify-center gap-1.5 pb-8 pt-4">
+                            {images.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setCurrentIndex(idx)}
+                                    className={`size-2 rounded-full transition-colors ${
+                                        idx === currentIndex ? "bg-white" : "bg-white/40"
+                                    }`}
+                                    aria-label={`Ir a imagen ${idx + 1}`}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
 
@@ -349,7 +487,7 @@ function TalentCard({ talentInfo }: { talentInfo: TalentInfo }) {
             {/* Avatar */}
             <div className="size-12 shrink-0 overflow-hidden rounded-full bg-brand-100">
                 <img
-                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`}
+                    src={talentInfo.profile_pic || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`}
                     alt={displayName}
                     className="size-full object-cover"
                 />

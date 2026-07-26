@@ -409,6 +409,12 @@
             "type": "string",
             "nullable": true
           },
+          "profile_pic": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Profile image URL."
+          },
           "location": {
             "allOf": [
               {
@@ -422,6 +428,7 @@
           "first_name",
           "last_name",
           "bio",
+          "profile_pic",
           "location"
         ]
       },

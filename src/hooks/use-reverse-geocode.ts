@@ -26,18 +26,23 @@ export function useReverseGeocode(
     const [error, setError] = useState<boolean>(false);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+    // Stabilize coordinates by extracting primitive values for the dependency array.
+    // This prevents re-triggering the effect when the caller creates a new object
+    // reference with the same lat/lng on every render.
+    const lat = coordinates?.latitude ?? null;
+    const lng = coordinates?.longitude ?? null;
+
     useEffect(() => {
         // Clear state when coordinates change or become null
         setAddress(null);
         setIsLoading(false);
         setError(false);
 
-        if (!coordinates) {
+        if (lat === null || lng === null) {
             return;
         }
 
-        const { latitude, longitude } = coordinates;
-        const cacheKey = `${latitude.toFixed(4)},${longitude.toFixed(4)}`;
+        const cacheKey = `${lat.toFixed(4)},${lng.toFixed(4)}`;
 
         // Check cache first
         const cached = geocodeCache.get(cacheKey);
@@ -62,8 +67,8 @@ export function useReverseGeocode(
             try {
                 const url = new URL("https://nominatim.openstreetmap.org/reverse");
                 url.searchParams.set("format", "json");
-                url.searchParams.set("lat", latitude.toString());
-                url.searchParams.set("lon", longitude.toString());
+                url.searchParams.set("lat", lat.toString());
+                url.searchParams.set("lon", lng.toString());
                 url.searchParams.set("zoom", "16");
 
                 const response = await fetch(url.toString(), {
@@ -107,7 +112,7 @@ export function useReverseGeocode(
                 clearTimeout(timeoutRef.current);
             }
         };
-    }, [coordinates]);
+    }, [lat, lng]);
 
     return { address, isLoading, error };
 }

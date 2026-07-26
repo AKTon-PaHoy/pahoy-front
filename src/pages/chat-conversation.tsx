@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { ChevronLeft } from "@untitledui/icons";
@@ -9,6 +9,7 @@ import { MessageBubble } from "@/components/application/chat/message-bubble";
 import { ContractCard } from "@/components/application/chat/contract-card";
 import { ChatInput } from "@/components/application/chat/chat-input";
 import { LoadingIndicator } from "@/components/application/loading-indicator/loading-indicator";
+import { api, ApiError } from "@/utils/api";
 import { cx } from "@/utils/cx";
 
 /**
@@ -19,14 +20,28 @@ import { cx } from "@/utils/cx";
  * - Determines message alignment and contract rendering based on current user
  * - Supports infinite scroll upward for older messages
  * - Preserves scroll position when prepending messages
- * - Displays header with other participant's name and back button
+ * - Displays header with other participant's name and gig reference
  * - Shows ChatInput component at bottom
  *
  * Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.4, 5.1, 5.2, 5.3, 5.4, 5.5, 6.1, 6.2, 6.3, 6.4
  */
+
+interface Gig {
+  id: string;
+  name: string;
+  talent: string;
+  price: number;
+  price_type: string;
+  description: string;
+}
+
 export function ChatConversation() {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
+
+  // State for gig details
+  const [gig, setGig] = useState<Gig | null>(null);
+  const [isLoadingGig, setIsLoadingGig] = useState(false);
 
   // Fetch messages and handle polling
   const {
@@ -54,6 +69,40 @@ export function ChatConversation() {
 
   // Find the current room to get room data
   const currentRoom = rooms.find((r) => r.id === roomId);
+
+  // Fetch gig details when room is loaded
+  useEffect(() => {
+    if (!currentRoom?.gig) return;
+
+    let isMounted = true;
+
+    const fetchGig = async () => {
+      try {
+        setIsLoadingGig(true);
+        const response = await api<Gig>(`/api/gigs/retrieve/${currentRoom.gig}/`);
+        if (isMounted) {
+          setGig(response);
+        }
+      } catch (err) {
+        if (isMounted) {
+          if (!(err instanceof ApiError && err.status === 401)) {
+            // Silently fail for gig fetch - it's optional for display
+            console.error("Error fetching gig details:", err);
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingGig(false);
+        }
+      }
+    };
+
+    fetchGig();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentRoom?.gig]);
 
   // Determine if current user is the gig owner (NOT the client_user)
   const isGigOwner =
@@ -148,9 +197,21 @@ export function ChatConversation() {
           <ChevronLeft className="size-6" />
         </button>
 
-        <h1 className="text-center text-base font-semibold text-primary flex-1">
-          {isLoadingUser ? "Cargando..." : otherParticipantName}
-        </h1>
+        <div className="flex-1 text-center">
+          <h1 className="text-base font-semibold text-primary">
+            {isLoadingUser ? "Cargando..." : otherParticipantName}
+          </h1>
+          {gig && (
+            <p className="mt-0.5 text-xs text-tertiary">
+              Gig: {gig.name}
+            </p>
+          )}
+          {isLoadingGig && !gig && (
+            <p className="mt-0.5 text-xs text-tertiary">
+              Cargando gig...
+            </p>
+          )}
+        </div>
 
         {/* Spacer to balance layout */}
         <div className="size-10" />

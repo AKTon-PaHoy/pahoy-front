@@ -96,12 +96,15 @@ export function formatMessageTimestamp(isoTimestamp: string): string {
 /**
  * Truncates text to maxLength (default 80) chars with "…" if truncated.
  * If text is shorter than maxLength, returns as-is.
+ * Safely handles null or undefined by returning an empty string.
  *
- * @param text - Text to truncate
+ * @param text - Text to truncate (can be null or undefined)
  * @param maxLength - Maximum length (default: 80)
- * @returns Truncated text
+ * @returns Truncated text or empty string if text is null/undefined
  */
-export function truncatePreview(text: string, maxLength: number = 80): string {
+export function truncatePreview(text: string | null | undefined, maxLength: number = 80): string {
+  // Handle null or undefined
+  if (!text || typeof text !== 'string') return '';
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "…";
 }

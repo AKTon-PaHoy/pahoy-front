@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { MarkerPin01, SearchLg } from "@untitledui/icons";
+import { MarkerPin01, SearchLg, User01 } from "@untitledui/icons";
 import { useNavigate } from "react-router";
 
 import { ServiceCard } from "@/components/application/service-card/service-card";
+import { useReverseGeocode } from "@/hooks/use-reverse-geocode";
 import { api } from "@/utils/api";
+import { fromGeoJSON } from "@/utils/coordinates";
 
 interface Gig {
     id: string;
@@ -18,23 +20,51 @@ interface Gig {
     updated_at: string;
 }
 
+interface UserData {
+    username: string;
+    email: string;
+    location: string | { type: string; coordinates: [number, number] } | null;
+}
+
+interface ProfileData {
+    first_name: string;
+    last_name: string;
+    profile_pic: string | null;
+}
+
 export const HomeScreen = () => {
     const navigate = useNavigate();
     const [gigs, setGigs] = useState<Gig[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [displayName, setDisplayName] = useState<string>("");
+    const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
+    const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
+
+    const { address } = useReverseGeocode(coordinates);
 
     useEffect(() => {
-        const fetchGigs = async () => {
+        const fetchData = async () => {
             try {
-                const response = await api<{ results: Gig[] }>("/api/gigs/search/");
-                setGigs(response.results);
+                const [gigsResponse, userData, profileData] = await Promise.all([
+                    api<{ results: Gig[] }>("/api/gigs/search/"),
+                    api<UserData>("/api/auth/user/"),
+                    api<ProfileData>("/api/profile/retrieve/"),
+                ]);
+
+                setGigs(gigsResponse.results);
+
+                // Use first_name if available, otherwise fall back to username
+                const name = profileData.first_name || userData.username;
+                setDisplayName(name);
+                setProfilePicUrl(profileData.profile_pic);
+                setCoordinates(fromGeoJSON(userData.location));
             } catch {
                 setGigs([]);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchGigs();
+        fetchData();
     }, []);
 
     return (
@@ -44,21 +74,31 @@ export const HomeScreen = () => {
                 <div className="flex items-start justify-between">
                     <div>
                         <h1 className="text-display-xs font-bold text-primary">
-                            ¿Qué tal, Guish?
+                            ¿Qué tal, {displayName}?
                         </h1>
                         <div className="mt-1 flex items-center gap-1 text-sm text-tertiary">
                             <MarkerPin01 className="size-4" />
-                            <span>Sabana Grande, Caracas</span>
+                            <span>{address || "Obteniendo ubicación..."}</span>
                         </div>
                     </div>
-                    {/* Avatar */}
-                    <div className="size-12 overflow-hidden rounded-full bg-brand-100">
-                        <img
-                            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Guish"
-                            alt="Avatar"
-                            className="size-full object-cover"
-                        />
-                    </div>
+                    {/* Avatar — navigates to profile */}
+                    <button
+                        onClick={() => navigate("/profile")}
+                        className="size-12 overflow-hidden rounded-full bg-brand-100"
+                        aria-label="Ir a perfil"
+                    >
+                        {profilePicUrl ? (
+                            <img
+                                src={profilePicUrl}
+                                alt="Foto de perfil"
+                                className="size-full object-cover"
+                            />
+                        ) : (
+                            <div className="flex size-full items-center justify-center">
+                                <User01 className="size-6 text-brand-600" />
+                            </div>
+                        )}
+                    </button>
                 </div>
 
                 {/* Search bar */}

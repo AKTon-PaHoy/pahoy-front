@@ -9,6 +9,7 @@ import { CompleteProfile } from "@/pages/complete-profile";
 import { GigOverview } from "@/pages/gig-overview";
 import { HomeScreen } from "@/pages/home-screen";
 import { Login } from "@/pages/login";
+import { NuevaChambaScreen } from "@/pages/nueva-chamba-screen";
 import { NotFound } from "@/pages/not-found";
 import { Search } from "@/pages/search";
 import { Signup } from "@/pages/signup";
@@ -22,6 +23,7 @@ import { getToken } from "@/utils/auth";
 import "@/styles/globals.css";
 
 const NAV_ROUTES = ["/home", "/search", "/contracts", "/gigs", "/profile"];
+const NO_NAV_ROUTES = ["/gigs/new"];
 
 /** Splash route that auto-redirects to /home if a valid token exists */
 function SplashGuard() {
@@ -76,7 +78,7 @@ function RequireOnboarding({ children }: { children: React.ReactNode }) {
 
 function AnimatedRoutes() {
     const location = useLocation();
-    const showNav = NAV_ROUTES.some((r) => location.pathname.startsWith(r));
+    const showNav = NAV_ROUTES.some((r) => location.pathname.startsWith(r)) && !NO_NAV_ROUTES.some((r) => location.pathname.startsWith(r));
 
     return (
         <>
@@ -90,6 +92,7 @@ function AnimatedRoutes() {
                     <Route path="/gig/:id" element={<RequireAuth><RequireOnboarding><PageTransition><GigOverview /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/complete-profile" element={<RequireAuth><PageTransition><CompleteProfile /></PageTransition></RequireAuth>} />
                     <Route path="/gigs" element={<RequireAuth><RequireOnboarding><PageTransition><ChambasScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/gigs/new" element={<RequireAuth><RequireOnboarding><PageTransition><NuevaChambaScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile" element={<RequireAuth><RequireOnboarding><PageTransition><Profile /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile/change-password" element={<RequireAuth><PageTransition><ChangePassword /></PageTransition></RequireAuth>} />
                     <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />

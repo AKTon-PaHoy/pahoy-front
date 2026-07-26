@@ -170,7 +170,7 @@
           "onboarding_complete": {
             "type": "boolean",
             "default": false,
-            "description": "Whether onboarding is complete. When true, first_name, last_name, birth_date, and document_id must remain filled."
+            "description": "Whether onboarding is complete. The first profile update must provide first_name, last_name, birth_date, and document_id; after completion these fields are optional but cannot be blank when supplied."
           }
         },
         "required": [
@@ -184,6 +184,7 @@
       },
       "TalentProfile": {
         "type": "object",
+        "description": "Talent profiles returned by search belong to non-anonymous users. Profiles retained after account deletion are excluded.",
         "properties": {
           "id": {
             "type": "string",
@@ -390,6 +391,56 @@
           "created_at",
           "updated_at",
           "price_type"
+        ]
+      },
+      "GigTalentInfo": {
+        "type": "object",
+        "description": "Public profile and location details for the talent who owns the gig.",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GeoPoint"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "first_name",
+          "last_name",
+          "bio",
+          "location"
+        ]
+      },
+      "GigRetrieve": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Gig"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "talent_info": {
+                "$ref": "#/components/schemas/GigTalentInfo"
+              }
+            },
+            "required": [
+              "talent_info"
+            ]
+          }
         ]
       },
       "GigList": {
@@ -2059,7 +2110,7 @@
                   "onboarding_complete": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Set true only when first_name, last_name, birth_date, and document_id are filled. These fields remain required after completion."
+                    "description": "Automatically set to true after the first valid update provides first_name, last_name, birth_date, and document_id. After completion these fields are optional but cannot be blank when supplied."
                   },
                   "profile_pic": {
                     "type": "string",
@@ -2729,7 +2780,8 @@
         "tags": [
           "Gigs"
         ],
-        "summary": "Retrieve a gig",
+        "summary": "Retrieve a gig with talent profile information",
+        "description": "Returns the gig details together with the associated talent's first name, last name, bio, and user location. Location coordinates use GeoJSON order: [longitude, latitude]. Profile fields may be null.",
         "security": [
           {
             "TokenAuth": []
@@ -2748,11 +2800,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response including gig and talent profile information",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Gig"
+                  "$ref": "#/components/schemas/GigRetrieve"
                 }
               }
             }
@@ -3940,8 +3992,8 @@
         "tags": [
           "Talents"
         ],
-        "summary": "Search talents by location",
-        "description": "Results are ordered by calculated distance. Current view default distance is 5 km.",
+        "summary": "Search non-anonymous talents by location",
+        "description": "Requires authentication. Searches TalentProfiles within the requested distance of the supplied coordinates or the authenticated user's registered location. Profiles associated with anonymous users, including profiles retained after account deletion, are never returned. Results are ordered by calculated distance. The current view default distance is 5 km.",
         "security": [
           {
             "TokenAuth": []

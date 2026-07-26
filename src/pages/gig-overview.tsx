@@ -13,9 +13,18 @@ import { useNavigate, useParams } from "react-router";
 
 import { Carousel } from "@/components/application/carousel/carousel-base";
 import { Button } from "@/components/base/buttons/button";
+import { useReverseGeocode } from "@/hooks/use-reverse-geocode";
 import { api } from "@/utils/api";
+import { fromGeoJSON } from "@/utils/coordinates";
 
 // --- Types ---
+
+interface TalentInfo {
+    first_name: string | null;
+    last_name: string | null;
+    bio: string | null;
+    location: { type: string; coordinates: [number, number] } | null;
+}
 
 interface Gig {
     id: string;
@@ -31,6 +40,7 @@ interface Gig {
     created_at: string;
     updated_at: string;
     price_type: "Fijo" | "Horas";
+    talent_info: TalentInfo;
 }
 
 interface Review {
@@ -190,11 +200,7 @@ export function GigOverview() {
                         )}
                     </Carousel.Root>
                 ) : (
-                    <div className="flex h-56 items-center justify-center rounded-2xl bg-neutral-100">
-                        <span className="text-sm text-tertiary">
-                            Sin imagen
-                        </span>
-                    </div>
+                    <div className="h-56 rounded-2xl bg-neutral-100" />
                 )}
             </section>
 
@@ -238,7 +244,7 @@ export function GigOverview() {
 
                 {/* Talent Card */}
                 <div className="mt-5">
-                    <TalentCard talentName={reviews[0]?.talent_name} />
+                    <TalentCard talentInfo={gig.talent_info} />
                 </div>
 
                 {/* Divider */}
@@ -316,8 +322,25 @@ export function GigOverview() {
 
 // --- Talent Card Sub-component ---
 
-function TalentCard({ talentName }: { talentName?: string }) {
-    const displayName = talentName || "Talento verificado";
+function TalentCard({ talentInfo }: { talentInfo: TalentInfo }) {
+    const displayName = [talentInfo.first_name, talentInfo.last_name]
+        .filter(Boolean)
+        .join(" ") || "Talento verificado";
+
+    const coordinates = fromGeoJSON(talentInfo.location);
+    const { address } = useReverseGeocode(coordinates);
+
+    // Show a compact location: pick 2 relevant segments
+    const shortAddress = (() => {
+        if (!address) return null;
+        const parts = address.split(",").map((s) => s.trim());
+        const candidates = parts.slice(1).filter((part, i, arr) => {
+            return !arr
+                .slice(0, i)
+                .some((prev) => prev.includes(part) || part.includes(prev));
+        });
+        return candidates.slice(0, 2).join(", ") || parts.slice(0, 2).join(", ");
+    })();
 
     return (
         <div className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
@@ -338,12 +361,14 @@ function TalentCard({ talentName }: { talentName?: string }) {
                     </span>
                     <ShieldTick className="size-4 text-brand-600" />
                 </div>
-                <p className="mt-0.5 text-xs text-tertiary">
-                    Talento verificado en Pa·Hoy
-                </p>
+                {talentInfo.bio && (
+                    <p className="mt-0.5 text-xs text-tertiary">
+                        {talentInfo.bio}
+                    </p>
+                )}
                 <div className="mt-1 flex items-center gap-1 text-xs text-tertiary">
-                    <MarkerPin01 className="size-3" />
-                    <span>Cerca de ti</span>
+                    <MarkerPin01 className="size-3 text-brand-600" />
+                    <span>{shortAddress || "Cerca de ti"}</span>
                 </div>
             </div>
         </div>

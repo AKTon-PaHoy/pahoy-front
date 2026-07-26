@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface UseReverseGeocodeResult {
     address: string | null;
     isLoading: boolean;
     error: boolean;
 }
+
+// Simple in-memory cache to avoid repeated requests for the same coordinates
+const geocodeCache = new Map<string, string>();
 
 /**
  * Custom hook for reverse geocoding using Nominatim API.
@@ -19,6 +22,7 @@ export function useReverseGeocode(
     const [address, setAddress] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         // Clear state when coordinates change or become null
@@ -31,6 +35,14 @@ export function useReverseGeocode(
         }
 
         const { latitude, longitude } = coordinates;
+        const cacheKey = `${latitude.toFixed(4)},${longitude.toFixed(4)}`;
+
+        // Check cache first
+        const cached = geocodeCache.get(cacheKey);
+        if (cached) {
+            setAddress(cached);
+            return;
+        }
 
         // AbortController to handle rapid coordinate changes
         const abortController = new AbortController();
@@ -44,13 +56,10 @@ export function useReverseGeocode(
                 url.searchParams.set("format", "json");
                 url.searchParams.set("lat", latitude.toString());
                 url.searchParams.set("lon", longitude.toString());
+                url.searchParams.set("zoom", "16");
 
                 const response = await fetch(url.toString(), {
                     signal: abortController.signal,
-                    headers: {
-                        // Required by Nominatim API - provide app name
-                        "User-Agent": "PaHoy/1.0",
-                    },
                 });
 
                 if (!response.ok) {
@@ -61,6 +70,7 @@ export function useReverseGeocode(
 
                 // Extract display_name from response
                 if (data && data.display_name) {
+                    geocodeCache.set(cacheKey, data.display_name);
                     setAddress(data.display_name);
                 } else {
                     setError(true);
@@ -77,11 +87,15 @@ export function useReverseGeocode(
             }
         };
 
-        fetchAddress();
+        // Debounce to avoid hitting rate limits
+        timeoutRef.current = setTimeout(fetchAddress, 300);
 
         // Cleanup: abort any pending request when coordinates change or unmounts
         return () => {
             abortController.abort();
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
         };
     }, [coordinates]);
 

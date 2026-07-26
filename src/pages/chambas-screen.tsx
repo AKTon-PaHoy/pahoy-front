@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { Plus } from "@untitledui/icons";
 
+import { ServiceCard } from "@/components/application/service-card/service-card";
 import { Button } from "@/components/base/buttons/button";
 import { api, ApiError } from "@/utils/api";
 
@@ -18,6 +19,8 @@ interface Gig {
     price: number;
     price_type: "Fijo" | "Horas";
     is_active: boolean;
+    rating?: number;
+    review_count?: number;
     created_at: string;
     updated_at: string;
 }
@@ -30,77 +33,6 @@ interface PaginatedGigResponse {
 }
 
 type TabFilter = "todas" | "activas" | "inactivas";
-
-// Helper function to format price
-function formatPrice(price: number, priceType: "Fijo" | "Horas"): string {
-    if (priceType === "Horas") {
-        return `$${price}/hr`;
-    }
-    return `Desde $${price}`;
-}
-
-// Status Badge Component
-function StatusBadge({ isActive }: { isActive: boolean }) {
-    const text = isActive ? "Activa" : "Inactiva";
-    const bgClass = isActive ? "bg-success-50" : "bg-neutral-100";
-    const textClass = isActive ? "text-success-700" : "text-neutral-600";
-
-    return (
-        <div
-            className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${bgClass} ${textClass}`}
-            aria-label={`Estado: ${text}`}
-        >
-            {text}
-        </div>
-    );
-}
-
-// Gig Card Component
-function GigCard({ gig }: { gig: Gig }) {
-    const navigate = useNavigate();
-
-    return (
-        <button
-            onClick={() => navigate(`/gig/${gig.id}`)}
-            className="flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white p-3 text-left transition-all hover:shadow-md active:shadow-sm"
-        >
-            {/* Image and Badge */}
-            <div className="relative aspect-square overflow-hidden rounded-lg bg-neutral-100">
-                {gig.gig_front_img ? (
-                    <img
-                        src={gig.gig_front_img}
-                        alt={gig.name}
-                        className="h-full w-full object-cover"
-                    />
-                ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-neutral-200 to-neutral-300 text-neutral-500">
-                        <span className="text-sm">Sin imagen</span>
-                    </div>
-                )}
-
-                {/* Badge positioned in top right */}
-                <div className="absolute top-2 right-2">
-                    <StatusBadge isActive={gig.is_active} />
-                </div>
-            </div>
-
-            {/* Content */}
-            <div className="flex flex-col gap-1">
-                <h3 className="text-sm font-semibold text-primary line-clamp-2">
-                    {gig.name}
-                </h3>
-                <p className="text-xs text-tertiary line-clamp-1">
-                    {gig.description}
-                </p>
-            </div>
-
-            {/* Price */}
-            <div className="text-sm font-medium text-brand-600">
-                {formatPrice(gig.price, gig.price_type)}
-            </div>
-        </button>
-    );
-}
 
 // Main Component
 export function ChambasScreen() {
@@ -134,6 +66,27 @@ export function ChambasScreen() {
         }
     };
 
+    // Toggle gig active status
+    const handleToggleStatus = async (gigId: string, isActive: boolean) => {
+        // Optimistic update
+        setGigs((prev) =>
+            prev.map((g) => (g.id === gigId ? { ...g, is_active: isActive } : g))
+        );
+        try {
+            await api(`/api/gigs/update/${gigId}/`, {
+                method: "PATCH",
+                body: { is_active: isActive },
+            });
+        } catch {
+            // Revert on failure
+            setGigs((prev) =>
+                prev.map((g) =>
+                    g.id === gigId ? { ...g, is_active: !isActive } : g
+                )
+            );
+        }
+    };
+
     // Mount effect
     useEffect(() => {
         fetchGigs(activeTab);
@@ -160,8 +113,8 @@ export function ChambasScreen() {
                     <Button
                         color="primary"
                         size="md"
-                        className="mt-4 opacity-50 cursor-not-allowed"
-                        disabled
+                        className="mt-4"
+                        onClick={() => navigate("/gigs/new")}
                     >
                         Crear chamba
                     </Button>
@@ -220,9 +173,9 @@ export function ChambasScreen() {
                                 onClick={() => handleTabChange(tab)}
                                 role="tab"
                                 aria-selected={activeTab === tab}
-                                className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                                     activeTab === tab
-                                        ? "bg-brand-solid text-white shadow-xs"
+                                        ? "bg-brand-solid text-white"
                                         : "text-neutral-500 hover:text-neutral-700"
                                 }`}
                             >
@@ -269,9 +222,23 @@ export function ChambasScreen() {
 
                 {/* Gig List */}
                 {!isLoading && !error && gigs.length > 0 && (
-                    <div className="mt-6 grid grid-cols-1 gap-4 pb-8">
+                    <div className="mt-4 flex flex-col gap-3 pb-8">
                         {gigs.map((gig) => (
-                            <GigCard key={gig.id} gig={gig} />
+                            <ServiceCard
+                                key={gig.id}
+                                gigId={gig.id}
+                                name={gig.name}
+                                providerName="Mi chamba"
+                                price={gig.price}
+                                priceType={gig.price_type}
+                                rating={gig.rating}
+                                reviewCount={gig.review_count}
+                                imageUrl={gig.gig_front_img ?? undefined}
+                                status={gig.is_active ? "active" : "inactive"}
+                                onToggleStatus={(isActive) =>
+                                    handleToggleStatus(gig.id, isActive)
+                                }
+                            />
                         ))}
                     </div>
                 )}

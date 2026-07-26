@@ -1,0 +1,182 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Create the NuevaChambaScreen page component with route registration": [
+      {
+        "executionId": "7e863542-201a-48e0-82e1-4b1915289741",
+        "chatSessionId": "sess_00c8ba26-cc29-4591-9787-38d2f726e9d5",
+        "timestamp": 1785028202229
+      },
+      {
+        "executionId": "7e863542-201a-48e0-82e1-4b1915289741",
+        "chatSessionId": "sess_00c8ba26-cc29-4591-9787-38d2f726e9d5",
+        "timestamp": 1785028706678
+      }
+    ],
+    "1.1 Create `src/pages/nueva-chamba-screen.tsx` with the full page layout, header (back button + logo + spacer), motion.div content animation, form shell, and submit button": [
+      {
+        "executionId": "7e863542-201a-48e0-82e1-4b1915289741",
+        "chatSessionId": "sess_00c8ba26-cc29-4591-9787-38d2f726e9d5",
+        "timestamp": 1785028482528
+      }
+    ],
+    "1.2 Register the `/gigs/new` route in `src/main.tsx` with RequireAuth, RequireOnboarding, and PageTransition wrappers": [
+      {
+        "executionId": "7e863542-201a-48e0-82e1-4b1915289741",
+        "chatSessionId": "sess_00c8ba26-cc29-4591-9787-38d2f726e9d5",
+        "timestamp": 1785028706622
+      }
+    ],
+    "2. Implement form fields and local state management": [
+      {
+        "executionId": "f43e52e9-667a-4961-be5d-ec33e184c2ed",
+        "chatSessionId": "sess_c1b32676-58b4-4d40-81cb-6e012f1ca7b4",
+        "timestamp": 1785028757131
+      },
+      {
+        "executionId": "f43e52e9-667a-4961-be5d-ec33e184c2ed",
+        "chatSessionId": "sess_c1b32676-58b4-4d40-81cb-6e012f1ca7b4",
+        "timestamp": 1785029526675
+      }
+    ],
+    "2.1 Add all form fields with controlled state (name, description, price, priceType, isActive, tags) using `useState`": [
+      {
+        "executionId": "f43e52e9-667a-4961-be5d-ec33e184c2ed",
+        "chatSessionId": "sess_c1b32676-58b4-4d40-81cb-6e012f1ca7b4",
+        "timestamp": 1785029538837
+      }
+    ],
+    "2.2 Implement the Image Upload Section with up to three image slots (front, second, third)": [
+      {
+        "executionId": "f43e52e9-667a-4961-be5d-ec33e184c2ed",
+        "chatSessionId": "sess_c1b32676-58b4-4d40-81cb-6e012f1ca7b4",
+        "timestamp": 1785029538930
+      }
+    ],
+    "3. Implement validation and submission logic": [
+      {
+        "executionId": "bec83143-8128-4d0e-b22e-e4c7c4aaae84",
+        "chatSessionId": "sess_45ba6540-f4af-4324-8662-bbe4a11843ea",
+        "timestamp": 1785029605183
+      },
+      {
+        "executionId": "bec83143-8128-4d0e-b22e-e4c7c4aaae84",
+        "chatSessionId": "sess_45ba6540-f4af-4324-8662-bbe4a11843ea",
+        "timestamp": 1785029836429
+      }
+    ],
+    "3.1 Implement `validateForm` function with client-side validation on submit only": [
+      {
+        "executionId": "bec83143-8128-4d0e-b22e-e4c7c4aaae84",
+        "chatSessionId": "sess_45ba6540-f4af-4324-8662-bbe4a11843ea",
+        "timestamp": 1785029628545
+      },
+      {
+        "executionId": "bec83143-8128-4d0e-b22e-e4c7c4aaae84",
+        "chatSessionId": "sess_45ba6540-f4af-4324-8662-bbe4a11843ea",
+        "timestamp": 1785029835944
+      }
+    ],
+    "3.2 Implement `buildFormData` and `handleSubmit` with `apiMultipart()` call and navigation on success": [
+      {
+        "executionId": "bec83143-8128-4d0e-b22e-e4c7c4aaae84",
+        "chatSessionId": "sess_45ba6540-f4af-4324-8662-bbe4a11843ea",
+        "timestamp": 1785029634339
+      },
+      {
+        "executionId": "bec83143-8128-4d0e-b22e-e4c7c4aaae84",
+        "chatSessionId": "sess_45ba6540-f4af-4324-8662-bbe4a11843ea",
+        "timestamp": 1785029836378
+      }
+    ],
+    "4. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "15269c7c-2364-4c0c-a14b-5fc7e55d5b8f",
+        "chatSessionId": "sess_691c2581-af37-48a1-89b2-f18bbb744aa4",
+        "timestamp": 1785029892110
+      },
+      {
+        "executionId": "15269c7c-2364-4c0c-a14b-5fc7e55d5b8f",
+        "chatSessionId": "sess_691c2581-af37-48a1-89b2-f18bbb744aa4",
+        "timestamp": 1785030627919
+      }
+    ],
+    "5.1 Update the \"Crear chamba\" button in `src/pages/chambas-screen.tsx` to navigate to `/gigs/new` instead of being disabled": [
+      {
+        "executionId": "264ff373-30ed-4964-8f69-6f1b2632708b",
+        "chatSessionId": "sess_8d858a32-b398-45c9-a7fe-52082dbd22af",
+        "timestamp": 1785030673589
+      },
+      {
+        "executionId": "264ff373-30ed-4964-8f69-6f1b2632708b",
+        "chatSessionId": "sess_8d858a32-b398-45c9-a7fe-52082dbd22af",
+        "timestamp": 1785030693871
+      }
+    ],
+    "5.2 Perform final visual validation of the NuevaChambaScreen against the Figma screenshot using Playwright MCP": [
+      {
+        "executionId": "264ff373-30ed-4964-8f69-6f1b2632708b",
+        "chatSessionId": "sess_8d858a32-b398-45c9-a7fe-52082dbd22af",
+        "timestamp": 1785030697286
+      },
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032207878
+      }
+    ],
+    "6.1 Adapt `src/components/application/service-card/service-card.tsx` only as needed to support the Chambas card state without regressing existing ServiceCard consumers": [
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032060618
+      },
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032191656
+      }
+    ],
+    "6.2 Replace the local square `GigCard` rendering in `src/pages/chambas-screen.tsx` with the adapted `ServiceCard` (or a thin Chambas-specific wrapper around it)": [
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032207919
+      },
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032217608
+      },
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032298272
+      }
+    ],
+    "6.3 Visually validate the complete Chambas view against `figma-screens/Service Card.png` using Playwright MCP": [
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032208069
+      },
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032303142
+      },
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032869474
+      }
+    ],
+    "6. Update the Chambas gig list to use the Service Card visual language": [
+      {
+        "executionId": "f8ba2bbe-f245-4ba7-92a2-a1c13723059f",
+        "chatSessionId": "sess_43af0134-4468-4cf0-9d2d-32045e193286",
+        "timestamp": 1785032869663
+      }
+    ]
+  }
+}

@@ -80,7 +80,7 @@ export function ContractDetailPage() {
 
     const completedIndex = getCompletedStepIndex(contract.status);
     const isCancelledOrDisputed = contract.status === "Cancelado" || contract.status === "Disputa";
-    const isGigOwner = currentUser && gig ? currentUser.id === gig.talent : false;
+    const isGigOwner = currentUser && gig ? (currentUser.id === gig.talent || currentUser.profileId === gig.talent) : false;
     const showCancelButton = isGigOwner && (contract.status === "Activo" || contract.status === "Confirmado");
 
     return (

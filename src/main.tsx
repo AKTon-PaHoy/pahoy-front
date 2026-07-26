@@ -12,6 +12,7 @@ import { CompleteProfile } from "@/pages/complete-profile";
 import { GigOverview } from "@/pages/gig-overview";
 import { HomeScreen } from "@/pages/home-screen";
 import { Login } from "@/pages/login";
+import { EditChambaScreen } from "@/pages/edit-chamba-screen";
 import { NuevaChambaScreen } from "@/pages/nueva-chamba-screen";
 import { NotFound } from "@/pages/not-found";
 import { Search } from "@/pages/search";
@@ -32,7 +33,7 @@ import { getToken } from "@/utils/auth";
 import "@/styles/globals.css";
 
 const NAV_ROUTES = ["/home", "/search", "/contracts", "/messages", "/profile", "/gigs"];
-const NO_NAV_ROUTES = ["/gigs/new", "/profile/edit", "/profile/change-email", "/messages/", "/contracts/"];
+const NO_NAV_ROUTES = ["/gigs/new", "/gigs/", "/profile/edit", "/profile/change-email", "/messages/", "/contracts/"];
 
 /** Check if a path should have navigation hidden */
 function shouldHideNav(pathname: string): boolean {
@@ -107,6 +108,7 @@ function AnimatedRoutes() {
                     <Route path="/complete-profile" element={<RequireAuth><PageTransition><CompleteProfile /></PageTransition></RequireAuth>} />
                     <Route path="/gigs" element={<RequireAuth><RequireOnboarding><PageTransition><ChambasScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/gigs/new" element={<RequireAuth><RequireOnboarding><PageTransition><NuevaChambaScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/gigs/:id/edit" element={<RequireAuth><RequireOnboarding><PageTransition><EditChambaScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/messages" element={<RequireAuth><RequireOnboarding><PageTransition><ChatList /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/messages/:roomId" element={<RequireAuth><RequireOnboarding><PageTransition><ChatConversation /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/contracts" element={<RequireAuth><RequireOnboarding><PageTransition><ContractsListPage /></PageTransition></RequireOnboarding></RequireAuth>} />

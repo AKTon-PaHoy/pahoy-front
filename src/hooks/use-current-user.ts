@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { api } from "@/utils/api";
 
 interface CurrentUser {
-  id: string; // UUID
+  id: string; // User UUID
+  profileId: string; // Profile UUID (used as talent FK in gigs)
 }
 
 interface UseCurrentUserReturn {
@@ -22,14 +23,18 @@ function notifyAll(user: CurrentUser | null) {
 
 async function doFetch(): Promise<CurrentUser | null> {
   try {
-    const response = await api<Record<string, unknown>>("/api/auth/user/");
+    const [userResponse, profileResponse] = await Promise.all([
+      api<Record<string, unknown>>("/api/auth/user/"),
+      api<Record<string, unknown>>("/api/profile/retrieve/"),
+    ]);
     // Normalize: accept id, pk, or uuid from the API
     const userId =
-      (response.id as string) ||
-      (response.pk as string) ||
-      (response.uuid as string) ||
+      (userResponse.id as string) ||
+      (userResponse.pk as string) ||
+      (userResponse.uuid as string) ||
       "";
-    cachedUser = { id: userId };
+    const profileId = (profileResponse.id as string) || "";
+    cachedUser = { id: userId, profileId };
   } catch {
     cachedUser = null;
   }
@@ -40,6 +45,7 @@ async function doFetch(): Promise<CurrentUser | null> {
 
 /**
  * Fetches the current authenticated user from GET /api/auth/user/
+ * and their profile from GET /api/profile/retrieve/.
  * Caches at module level. All mounted instances are notified on fetch completion.
  */
 export function useCurrentUser(): UseCurrentUserReturn {

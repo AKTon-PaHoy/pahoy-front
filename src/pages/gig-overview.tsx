@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
     ChevronLeft,
     ChevronRight,
+    Edit02,
     InfoCircle,
     Star01,
     ShieldTick,
@@ -71,6 +72,10 @@ export function GigOverview() {
     const [error, setError] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+    // Ownership check state
+    const [isOwner, setIsOwner] = useState(false);
+    const [isCheckingOwnership, setIsCheckingOwnership] = useState(true);
+
     // Room creation state
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
     const [roomCreationError, setRoomCreationError] = useState<string | null>(null);
@@ -95,6 +100,40 @@ export function GigOverview() {
     useEffect(() => {
         fetchGig();
     }, [fetchGig]);
+
+    // Check ownership via my-gigs endpoint
+    useEffect(() => {
+        if (!currentUser || !id) {
+            setIsCheckingOwnership(false);
+            return;
+        }
+
+        let cancelled = false;
+
+        async function checkOwnership() {
+            try {
+                const data = await api<{ results: { id: string }[] }>("/api/gigs/my-gigs/");
+                if (!cancelled) {
+                    setIsOwner(data.results.some((g) => g.id === id));
+                }
+            } catch {
+                // User might not have a talent profile (404) or other error
+                if (!cancelled) {
+                    setIsOwner(false);
+                }
+            } finally {
+                if (!cancelled) {
+                    setIsCheckingOwnership(false);
+                }
+            }
+        }
+
+        checkOwnership();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [currentUser, id]);
 
     // Handle "Chatear" button tap to create room
     const handleCreateRoom = useCallback(async () => {
@@ -373,62 +412,60 @@ export function GigOverview() {
             {/* Fixed Bottom CTA - Always visible */}
             <div className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-[750px] bg-white px-4 pt-3 pb-safe">
                 <div className="pb-4">
-                    <button
-                        onClick={() => {
-                            if (!currentUser) {
-                                // User not logged in: navigate to login
-                                navigate("/login");
-                            } else if (currentUser.id === gig.talent) {
-                                // User is gig owner: button is disabled, do nothing
-                            } else {
-                                // User is logged in and not owner: create chat room
-                                handleCreateRoom();
-                            }
-                        }}
-                        disabled={
-                            isLoadingUser ||
-                            isCreatingRoom ||
-                            (currentUser ? currentUser.id === gig.talent : false)
-                        }
-                        className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 shadow-sm transition-colors ${
-                            isLoadingUser || !currentUser || currentUser.id === gig.talent
-                                ? "cursor-not-allowed bg-neutral-200 text-neutral-600"
-                                : isCreatingRoom
-                                  ? "cursor-wait bg-brand-600/80 text-white"
-                                  : "active:bg-brand-700 bg-brand-600 text-white"
-                        }`}
-                    >
-                        {isLoadingUser ? (
-                            <>
-                                <div className="size-5 animate-spin rounded-full border-2 border-neutral-600/30 border-t-neutral-600" />
-                                <span className="text-base font-semibold">Cargando...</span>
-                            </>
-                        ) : isCreatingRoom ? (
-                            <>
-                                <div className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                                <span className="text-base font-semibold">Creando sala...</span>
-                            </>
-                        ) : !currentUser ? (
-                            <>
-                                <MessageChatCircle className="size-5" />
-                                <span className="text-base font-semibold">
-                                    Inicia sesión para chatear
-                                </span>
-                            </>
-                        ) : currentUser.id === gig.talent ? (
-                            <>
-                                <MessageChatCircle className="size-5" />
-                                <span className="text-base font-semibold">
-                                    No puedes chatear contigo mismo
-                                </span>
-                            </>
-                        ) : (
-                            <>
-                                <MessageChatCircle className="size-5" />
-                                <span className="text-base font-semibold">Chatear</span>
-                            </>
-                        )}
-                    </button>
+                    {isLoadingUser || isCheckingOwnership ? (
+                        <button
+                            disabled
+                            className="flex w-full items-center justify-center gap-2 rounded-xl cursor-not-allowed bg-neutral-200 px-6 py-4 text-neutral-600 shadow-sm"
+                        >
+                            <div className="size-5 animate-spin rounded-full border-2 border-neutral-600/30 border-t-neutral-600" />
+                            <span className="text-base font-semibold">Cargando...</span>
+                        </button>
+                    ) : isOwner ? (
+                        <button
+                            onClick={() => navigate(`/gigs/${id}/edit`)}
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 py-4 text-white shadow-sm transition-colors active:bg-brand-700"
+                        >
+                            <Edit02 className="size-5" />
+                            <span className="text-base font-semibold">Editar chamba</span>
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => {
+                                if (!currentUser) {
+                                    navigate("/login");
+                                } else {
+                                    handleCreateRoom();
+                                }
+                            }}
+                            disabled={isCreatingRoom}
+                            className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 shadow-sm transition-colors ${
+                                !currentUser
+                                    ? "cursor-not-allowed bg-neutral-200 text-neutral-600"
+                                    : isCreatingRoom
+                                      ? "cursor-wait bg-brand-600/80 text-white"
+                                      : "active:bg-brand-700 bg-brand-600 text-white"
+                            }`}
+                        >
+                            {isCreatingRoom ? (
+                                <>
+                                    <div className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                                    <span className="text-base font-semibold">Creando sala...</span>
+                                </>
+                            ) : !currentUser ? (
+                                <>
+                                    <MessageChatCircle className="size-5" />
+                                    <span className="text-base font-semibold">
+                                        Inicia sesión para chatear
+                                    </span>
+                                </>
+                            ) : (
+                                <>
+                                    <MessageChatCircle className="size-5" />
+                                    <span className="text-base font-semibold">Chatear</span>
+                                </>
+                            )}
+                        </button>
+                    )}
 
                     {/* Error message */}
                     {roomCreationError && (

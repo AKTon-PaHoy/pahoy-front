@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { ChevronLeft } from "@untitledui/icons";
@@ -8,6 +8,8 @@ import { RoomItem } from "@/components/application/chat/room-item";
 import { LoadingIndicator } from "@/components/application/loading-indicator/loading-indicator";
 import { Button } from "@/components/base/buttons/button";
 import { resolveOtherParticipant } from "@/utils/chat";
+import { api } from "@/utils/api";
+import type { Gig } from "@/types/gig";
 
 /**
  * ChatList page component
@@ -15,6 +17,7 @@ import { resolveOtherParticipant } from "@/utils/chat";
  * Displays all chat rooms for the authenticated user.
  * - Fetches rooms via useChatRooms hook
  * - Resolves other participant names using useCurrentUser
+ * - Fetches and caches gig names for each room
  * - Supports infinite scroll for pagination (200px threshold)
  * - Shows loading, empty, and error states
  * - Each room navigates to the conversation view
@@ -38,8 +41,40 @@ export function ChatList() {
   // Get current user for participant resolution
   const { user: currentUser } = useCurrentUser();
 
+  // Cache gig names to avoid multiple fetches
+  const [gigNames, setGigNames] = useState<Record<string, string>>({});
+
   // Scroll management for infinite scroll
   const roomsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Fetch gig details for rooms
+  useEffect(() => {
+    const fetchGigNames = async () => {
+      const gigIdsToFetch = rooms
+        .filter((room) => room.gig && !gigNames[room.gig])
+        .map((room) => room.gig);
+
+      if (gigIdsToFetch.length === 0) return;
+
+      // Fetch gig details for each missing gig ID
+      const newGigNames: Record<string, string> = {};
+      for (const gigId of gigIdsToFetch) {
+        try {
+          const gig = await api<Gig>(`/api/gigs/retrieve/${gigId}/`);
+          newGigNames[gigId] = gig.name;
+        } catch {
+          // If gig fetch fails, we'll show "Cargando..." gracefully
+          newGigNames[gigId] = "Cargando...";
+        }
+      }
+
+      setGigNames((prev) => ({ ...prev, ...newGigNames }));
+    };
+
+    if (rooms.length > 0) {
+      fetchGigNames();
+    }
+  }, [rooms, gigNames]);
 
   // Detect infinite scroll downward
   useEffect(() => {
@@ -136,12 +171,15 @@ export function ChatList() {
                 ? resolveOtherParticipant(room, currentUser.id)
                 : "Usuario";
 
+              const gigName = room.gig ? gigNames[room.gig] : undefined;
+
               return (
                 <RoomItem
                   key={room.id}
                   otherParticipantName={otherParticipantName}
                   lastMessage={room.last_message}
                   createdAt={room.created_at}
+                  gigName={gigName}
                   onClick={() => handleRoomClick(room.id)}
                 />
               );

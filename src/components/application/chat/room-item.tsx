@@ -4,6 +4,7 @@ export interface RoomItemProps {
   otherParticipantName: string;
   lastMessage: string | null;
   createdAt: string;
+  gigName?: string;
   onClick: () => void;
 }
 
@@ -11,7 +12,7 @@ export interface RoomItemProps {
  * RoomItem Component
  *
  * Displays a chat room entry in the chat list view with participant name,
- * truncated message preview, and formatted timestamp.
+ * gig reference, truncated message preview, and formatted timestamp.
  *
  * **Validates: Requirements 7.2, 7.3, 7.4**
  *
@@ -19,6 +20,7 @@ export interface RoomItemProps {
  * ```tsx
  * <RoomItem
  *   otherParticipantName="Juan"
+ *   gigName="Reparación de aires"
  *   lastMessage="¿Cuándo puedes empezar con el trabajo?"
  *   createdAt="2025-01-15T14:30:00Z"
  *   onClick={() => navigate(`/messages/${roomId}`)}
@@ -29,6 +31,7 @@ export function RoomItem({
   otherParticipantName,
   lastMessage,
   createdAt,
+  gigName,
   onClick,
 }: RoomItemProps) {
   const formattedTimestamp = formatMessageTimestamp(createdAt);
@@ -49,6 +52,11 @@ export function RoomItem({
         </h3>
         <span className="text-xs text-tertiary">{formattedTimestamp}</span>
       </div>
+
+      {/* Middle row: gig reference (if available) */}
+      {gigName && (
+        <p className="text-xs text-tertiary">Gig: {gigName}</p>
+      )}
 
       {/* Message preview */}
       <p className="line-clamp-1 text-sm text-tertiary">{displayMessage}</p>

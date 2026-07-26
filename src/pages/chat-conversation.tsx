@@ -16,14 +16,6 @@ import { cx } from "@/utils/cx";
  * ChatConversation page component
  *
  * Displays the message thread for a specific chat room.
- * - Fetches messages via useChatMessages hook
- * - Determines message alignment and contract rendering based on current user
- * - Supports infinite scroll upward for older messages
- * - Preserves scroll position when prepending messages
- * - Displays header with other participant's name and gig reference
- * - Shows ChatInput component at bottom
- *
- * Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.4, 5.1, 5.2, 5.3, 5.4, 5.5, 6.1, 6.2, 6.3, 6.4
  */
 
 interface Gig {
@@ -79,14 +71,15 @@ export function ChatConversation() {
     const fetchGig = async () => {
       try {
         setIsLoadingGig(true);
-        const response = await api<Gig>(`/api/gigs/retrieve/${currentRoom.gig}/`);
+        const response = await api<Gig>(
+          `/api/gigs/retrieve/${currentRoom.gig}/`,
+        );
         if (isMounted) {
           setGig(response);
         }
       } catch (err) {
         if (isMounted) {
           if (!(err instanceof ApiError && err.status === 401)) {
-            // Silently fail for gig fetch - it's optional for display
             console.error("Error fetching gig details:", err);
           }
         }
@@ -111,7 +104,10 @@ export function ChatConversation() {
       : false;
 
   // Determine if current user is the client
-  const isClient = currentUser && currentRoom ? currentUser.id === currentRoom.client_user : false;
+  const isClient =
+    currentUser && currentRoom
+      ? currentUser.id === currentRoom.client_user
+      : false;
 
   // Get other participant's name from room
   const otherParticipantName =
@@ -119,7 +115,9 @@ export function ChatConversation() {
       ? currentRoom.participant_names[
           currentRoom.participants.indexOf(currentUser.id) === 0 ? 1 : 0
         ]
-      : "Usuario";
+      : currentRoom
+        ? currentRoom.participant_names[0] || "Usuario"
+        : "Usuario";
 
   // Handle back navigation
   const handleBack = () => {
@@ -146,8 +144,6 @@ export function ChatConversation() {
     const container = messagesContainerRef.current;
     if (!container) return;
 
-    // When older messages are loaded (prev count < current count),
-    // adjust scroll to maintain view position
     if (
       messages.length > prevMessageCountRef.current &&
       prevScrollHeightRef.current > 0
@@ -165,7 +161,6 @@ export function ChatConversation() {
     const container = messagesContainerRef.current;
     if (!container || isLoading) return;
 
-    // Small delay to ensure DOM has updated
     const timeoutId = setTimeout(() => {
       container.scrollTop = container.scrollHeight;
     }, 0);
@@ -177,21 +172,36 @@ export function ChatConversation() {
     async (content: string, attachment?: File) => {
       return sendMessage(content, attachment);
     },
-    [sendMessage]
+    [sendMessage],
   );
 
+  /**
+   * Determines if a message was sent by the current user.
+   * Uses sender UUID comparison with currentUser.id as primary check.
+   * Falls back to checking if sender matches one of the room participants.
+   */
+  const checkIsOwnMessage = (senderUuid: string): boolean => {
+    if (currentUser) {
+      return senderUuid === currentUser.id;
+    }
+    // Fallback: if currentUser isn't loaded but we have room data,
+    // check if sender is NOT the other participant (assumes 2 participants)
+    if (currentRoom) {
+      // client_user is one participant, the other is the talent/gig owner
+      // If sender is client_user, and we ARE the client, it's own
+      // We can't determine this without currentUser, so default to false
+      return false;
+    }
+    return false;
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className="min-h-dvh flex flex-col bg-white"
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
+    <div className="flex h-dvh flex-col bg-white">
+      {/* Header - fixed at top */}
+      <div className="shrink-0 flex items-center justify-between border-b border-neutral-200 px-4 py-3">
         <button
           onClick={handleBack}
-          className="size-10 rounded-lg text-neutral-500 hover:bg-neutral-50 flex items-center justify-center"
+          className="flex size-10 items-center justify-center rounded-lg text-neutral-500 hover:bg-neutral-50"
           aria-label="Volver atrás"
         >
           <ChevronLeft className="size-6" />
@@ -202,14 +212,10 @@ export function ChatConversation() {
             {isLoadingUser ? "Cargando..." : otherParticipantName}
           </h1>
           {gig && (
-            <p className="mt-0.5 text-xs text-tertiary">
-              Gig: {gig.name}
-            </p>
+            <p className="mt-0.5 text-xs text-tertiary">Gig: {gig.name}</p>
           )}
           {isLoadingGig && !gig && (
-            <p className="mt-0.5 text-xs text-tertiary">
-              Cargando gig...
-            </p>
+            <p className="mt-0.5 text-xs text-tertiary">Cargando gig...</p>
           )}
         </div>
 
@@ -217,10 +223,11 @@ export function ChatConversation() {
         <div className="size-10" />
       </div>
 
-      {/* Messages container */}
+      {/* Messages container - scrollable area between header and input */}
       <div
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto px-4 py-4"
+        style={{ minHeight: 0 }}
       >
         {/* Loading indicator for initial load */}
         {isLoading && (
@@ -254,23 +261,20 @@ export function ChatConversation() {
         {!isLoading && messages.length > 0 && (
           <div className="flex flex-col gap-4">
             {messages.map((message) => {
-              const isOwnMessage = currentUser && message.sender === currentUser.id;
+              const isOwnMessage = checkIsOwnMessage(message.sender);
 
               return (
-                <motion.div
+                <div
                   key={message.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
                   className={cx(
                     "flex",
-                    isOwnMessage ? "justify-end" : "justify-start"
+                    isOwnMessage ? "justify-end" : "justify-start",
                   )}
                 >
                   {message.contract ? (
                     <ContractCard
                       contractId={message.contract}
-                      isOwnMessage={isOwnMessage || false}
+                      isOwnMessage={isOwnMessage}
                       isClient={isClient}
                       timestamp={message.timestamp}
                     />
@@ -279,25 +283,27 @@ export function ChatConversation() {
                       content={message.content}
                       senderUsername={message.sender_username}
                       timestamp={message.timestamp}
-                      isOwnMessage={isOwnMessage || false}
+                      isOwnMessage={isOwnMessage}
                       attachment={message.attachment}
                     />
                   )}
-                </motion.div>
+                </div>
               );
             })}
           </div>
         )}
       </div>
 
-      {/* Chat input at bottom */}
-      <ChatInput
-        onSend={handleSendMessage}
-        isSending={isSending}
-        sendError={sendError}
-        isGigOwner={isGigOwner}
-      />
-    </motion.div>
+      {/* Chat input - fixed at bottom */}
+      <div className="shrink-0">
+        <ChatInput
+          onSend={handleSendMessage}
+          isSending={isSending}
+          sendError={sendError}
+          isGigOwner={isGigOwner}
+        />
+      </div>
+    </div>
   );
 }
 

@@ -134,14 +134,15 @@ export function useChatMessages(roomId: string): UseChatMessagesReturn {
   // Polling mechanism
   useEffect(() => {
     let isMounted = true;
+    let isPollInProgress = false;
 
     const poll = async () => {
-      // Don't poll if tab is hidden or if already in a poll
-      if (document.hidden || pollAbortControllerRef.current?.signal.aborted === false) {
+      // Skip if already polling or if tab is hidden
+      if (isPollInProgress || document.hidden) {
         return;
       }
 
-      pollAbortControllerRef.current = new AbortController();
+      isPollInProgress = true;
 
       try {
         // Build poll URL with after_id if we have messages
@@ -154,7 +155,7 @@ export function useChatMessages(roomId: string): UseChatMessagesReturn {
 
         const response = await api<PaginatedResponse<Message>>(pollUrl);
 
-        if (isMounted && !pollAbortControllerRef.current?.signal.aborted) {
+        if (isMounted) {
           // Reverse API response for chronological order
           const reversed = response.results.reverse();
 
@@ -170,15 +171,14 @@ export function useChatMessages(roomId: string): UseChatMessagesReturn {
         // Silent failure for polls (non-401 errors)
         if (err instanceof ApiError && err.status === 401) {
           // 401 is handled by api() utility and redirects automatically
-          if (isMounted) {
-            // Stop polling on 401
-            if (pollIntervalRef.current) {
-              clearInterval(pollIntervalRef.current);
-              pollIntervalRef.current = null;
-            }
+          if (isMounted && pollIntervalRef.current) {
+            clearInterval(pollIntervalRef.current);
+            pollIntervalRef.current = null;
           }
         }
         // Other errors: silently skip this cycle, retry next interval
+      } finally {
+        isPollInProgress = false;
       }
     };
 
@@ -193,24 +193,15 @@ export function useChatMessages(roomId: string): UseChatMessagesReturn {
 
       // Then set up 5-second interval
       pollIntervalRef.current = setInterval(() => {
-        if (!document.hidden) {
-          poll();
-        }
+        poll();
       }, 5000);
     };
 
     // Handle visibility change
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        // Tab became visible: immediate poll + resume interval
+        // Tab became visible: immediate poll
         poll();
-        startPolling();
-      } else {
-        // Tab became hidden: pause polling
-        if (pollIntervalRef.current) {
-          clearInterval(pollIntervalRef.current);
-          pollIntervalRef.current = null;
-        }
       }
     };
 
@@ -227,9 +218,7 @@ export function useChatMessages(roomId: string): UseChatMessagesReturn {
         clearInterval(pollIntervalRef.current);
         pollIntervalRef.current = null;
       }
-      if (pollAbortControllerRef.current) {
-        pollAbortControllerRef.current.abort();
-      }
+      isMounted = false;
     };
   }, [roomId, isLoading, updateMessagesUI]);
 

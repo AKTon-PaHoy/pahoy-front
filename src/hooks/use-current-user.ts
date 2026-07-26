@@ -11,19 +11,36 @@ interface UseCurrentUserReturn {
   error: boolean;
 }
 
-// Module-level cache to avoid redundant fetches across components
+// Module-level store
 let cachedUser: CurrentUser | null = null;
-let cachePromise: Promise<void> | null = null;
+let fetchPromise: Promise<CurrentUser | null> | null = null;
+const subscribers = new Set<(user: CurrentUser | null) => void>();
+
+function notifyAll(user: CurrentUser | null) {
+  subscribers.forEach((cb) => cb(user));
+}
+
+async function doFetch(): Promise<CurrentUser | null> {
+  try {
+    const response = await api<Record<string, unknown>>("/api/auth/user/");
+    // Normalize: accept id, pk, or uuid from the API
+    const userId =
+      (response.id as string) ||
+      (response.pk as string) ||
+      (response.uuid as string) ||
+      "";
+    cachedUser = { id: userId };
+  } catch {
+    cachedUser = null;
+  }
+  fetchPromise = null;
+  notifyAll(cachedUser);
+  return cachedUser;
+}
 
 /**
  * Fetches the current authenticated user from GET /api/auth/user/
- * Caches the result at the module level to prevent redundant API calls
- * across components.
- *
- * Returns { user, isLoading, error }
- * - user: null if not yet loaded or if an error occurred
- * - isLoading: true while the initial fetch is in progress
- * - error: true if the fetch failed (401 is handled by api() utility and redirects)
+ * Caches at module level. All mounted instances are notified on fetch completion.
  */
 export function useCurrentUser(): UseCurrentUserReturn {
   const [user, setUser] = useState<CurrentUser | null>(cachedUser);
@@ -31,56 +48,35 @@ export function useCurrentUser(): UseCurrentUserReturn {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // If already cached, use it immediately
+    // Subscribe to future updates
+    const handler = (newUser: CurrentUser | null) => {
+      setUser(newUser);
+      setIsLoading(false);
+      setError(newUser === null);
+    };
+    subscribers.add(handler);
+
+    // If already cached, use immediately
     if (cachedUser) {
       setUser(cachedUser);
       setIsLoading(false);
-      return;
-    }
-
-    // If a fetch is already in progress, wait for it
-    if (cachePromise) {
-      let isMounted = true;
-      cachePromise.then(() => {
-        if (isMounted) {
-          setUser(cachedUser);
-          setIsLoading(false);
-        }
-      });
       return () => {
-        isMounted = false;
+        subscribers.delete(handler);
       };
     }
 
-    // Start a new fetch
-    let isMounted = true;
+    // If fetch is in progress, just wait for notification
+    if (fetchPromise) {
+      return () => {
+        subscribers.delete(handler);
+      };
+    }
 
-    const fetchUser = async () => {
-      try {
-        const response = await api<CurrentUser>("/api/auth/user/");
-        if (isMounted) {
-          cachedUser = response;
-          setUser(response);
-          setError(false);
-        }
-      } catch {
-        if (isMounted) {
-          setUser(null);
-          setError(true);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    cachePromise = fetchUser().then(() => {
-      cachePromise = null;
-    });
+    // Start fresh fetch
+    fetchPromise = doFetch();
 
     return () => {
-      isMounted = false;
+      subscribers.delete(handler);
     };
   }, []);
 

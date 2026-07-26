@@ -1,6 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { motion } from "motion/react";
 import { ChevronLeft } from "@untitledui/icons";
 import { useChatMessages } from "@/hooks/use-chat-messages";
 import { useCurrentUser } from "@/hooks/use-current-user";

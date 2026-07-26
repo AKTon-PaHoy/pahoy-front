@@ -1,5 +1,5 @@
 import type { FC, HTMLAttributes } from "react";
-import { Briefcase02, ClipboardCheck, Home02, SearchLg, User01 } from "@untitledui/icons";
+import { ClipboardCheck, Home02, MessageChatCircle, SearchLg, User01 } from "@untitledui/icons";
 import { useLocation, useNavigate } from "react-router";
 
 import { cx } from "@/utils/cx";
@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
     { label: "Inicio", path: "/home", icon: Home02 },
     { label: "Buscar", path: "/search", icon: SearchLg },
     { label: "Contratos", path: "/contracts", icon: ClipboardCheck },
-    { label: "Chambas", path: "/gigs", icon: Briefcase02 },
+    { label: "Mensajes", path: "/messages", icon: MessageChatCircle },
     { label: "Perfil", path: "/profile", icon: User01 },
 ];
 

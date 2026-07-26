@@ -16,6 +16,8 @@ import { Search } from "@/pages/search";
 import { Signup } from "@/pages/signup";
 import { Splash } from "@/pages/splash";
 import { Profile } from "@/pages/profile";
+import { ProfileEdit } from "@/pages/profile-edit";
+import { ChangeEmail } from "@/pages/change-email";
 import { ChangePassword } from "@/pages/change-password";
 import { OfflineIndicator } from "@/components/application/offline-indicator/offline-indicator";
 import { RouteProvider } from "@/providers/router-provider";
@@ -24,8 +26,8 @@ import { api, validateToken } from "@/utils/api";
 import { getToken } from "@/utils/auth";
 import "@/styles/globals.css";
 
-const NAV_ROUTES = ["/home", "/search", "/contracts", "/gigs", "/profile"];
-const NO_NAV_ROUTES = ["/gigs/new"];
+const NAV_ROUTES = ["/home", "/search", "/contracts", "/messages", "/profile", "/gigs"];
+const NO_NAV_ROUTES = ["/gigs/new", "/profile/edit", "/profile/change-email"];
 
 /** Splash route that auto-redirects to /home if a valid token exists */
 function SplashGuard() {
@@ -97,6 +99,8 @@ function AnimatedRoutes() {
                     <Route path="/gigs/new" element={<RequireAuth><RequireOnboarding><PageTransition><NuevaChambaScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile" element={<RequireAuth><RequireOnboarding><PageTransition><Profile /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile/change-password" element={<RequireAuth><PageTransition><ChangePassword /></PageTransition></RequireAuth>} />
+                    <Route path="/profile/edit" element={<RequireAuth><RequireOnboarding><PageTransition><ProfileEdit /></PageTransition></RequireOnboarding></RequireAuth>} />
+                    <Route path="/profile/change-email" element={<RequireAuth><RequireOnboarding><PageTransition><ChangeEmail /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
                 </Routes>
             </AnimatePresence>

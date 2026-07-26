@@ -1,5 +1,5 @@
-import { type FormEvent, useState } from "react";
-import { CheckCircle, ChevronLeft, Lock01 } from "@untitledui/icons";
+import { type FormEvent, useEffect, useState } from "react";
+import { ChevronLeft, Lock01, Mail01 } from "@untitledui/icons";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 
@@ -7,17 +7,25 @@ import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { api, ApiError } from "@/utils/api";
 
-export function ChangePassword() {
+export function ChangeEmail() {
     const navigate = useNavigate();
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [currentEmail, setCurrentEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [newEmail, setNewEmail] = useState("");
+    const [newEmailConfirm, setNewEmailConfirm] = useState("");
+
+    useEffect(() => {
+        api<{ email: string }>("/api/auth/user/").then((data) => {
+            setCurrentEmail(data.email);
+        }).catch(() => {
+            // Non-critical — subtitle will just omit the email
+        });
+    }, []);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
     const [errors, setErrors] = useState<{
-        current_password?: string;
-        new_password?: string;
-        new_password_confirm?: string;
+        password?: string;
+        new_email?: string;
+        new_email_confirm?: string;
     }>({});
 
     const handleSubmit = async (e: FormEvent) => {
@@ -26,16 +34,19 @@ export function ChangePassword() {
         // Client-side validation
         const newErrors: typeof errors = {};
 
-        if (!currentPassword.trim()) {
-            newErrors.current_password =
-                "La contraseña actual es requerida";
+        if (!password.trim()) {
+            newErrors.password = "La contraseña es requerida";
         }
-        if (newPassword.length < 8) {
-            newErrors.new_password =
-                "La nueva contraseña debe tener al menos 8 caracteres";
+        if (!newEmail.trim()) {
+            newErrors.new_email = "El nuevo correo es requerido";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail.trim())) {
+            newErrors.new_email = "Ingresa un correo electrónico válido";
         }
-        if (newPassword !== confirmPassword) {
-            newErrors.new_password_confirm = "Las contraseñas no coinciden";
+        if (!newEmailConfirm.trim()) {
+            newErrors.new_email_confirm =
+                "La confirmación de correo es requerida";
+        } else if (newEmail.trim() !== newEmailConfirm.trim()) {
+            newErrors.new_email_confirm = "Los correos no coinciden";
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -46,29 +57,27 @@ export function ChangePassword() {
         // API call
         setIsSubmitting(true);
         try {
-            await api<{ detail: string }>("/api/auth/change-password/", {
+            await api("/api/auth/change-email/", {
                 method: "POST",
                 body: {
-                    current_password: currentPassword,
-                    new_password: newPassword,
-                    new_password_confirm: confirmPassword,
+                    password: password,
+                    new_email: newEmail.trim(),
+                    new_email_confirm: newEmailConfirm.trim(),
                 },
             });
-            setShowSuccess(true);
-            setTimeout(() => navigate("/profile"), 2000);
+            navigate("/profile");
         } catch (err) {
             if (err instanceof ApiError) {
                 const mapped: typeof errors = {};
-                if (err.fieldErrors.current_password) {
-                    mapped.current_password =
-                        err.fieldErrors.current_password[0];
+                if (err.fieldErrors.password) {
+                    mapped.password = err.fieldErrors.password[0];
                 }
-                if (err.fieldErrors.new_password) {
-                    mapped.new_password = err.fieldErrors.new_password[0];
+                if (err.fieldErrors.new_email) {
+                    mapped.new_email = err.fieldErrors.new_email[0];
                 }
-                if (err.fieldErrors.new_password_confirm) {
-                    mapped.new_password_confirm =
-                        err.fieldErrors.new_password_confirm[0];
+                if (err.fieldErrors.new_email_confirm) {
+                    mapped.new_email_confirm =
+                        err.fieldErrors.new_email_confirm[0];
                 }
                 setErrors(mapped);
             }
@@ -102,10 +111,12 @@ export function ChangePassword() {
                 {/* Title section */}
                 <div className="text-center">
                     <h1 className="text-display-xs font-bold text-primary text-center">
-                        Cambiar contraseña
+                        Cambiar correo
                     </h1>
                     <p className="mt-1 text-sm text-tertiary text-center">
-                        Actualiza tu contraseña de acceso
+                        {currentEmail
+                            ? `Tu correo actual es ${currentEmail}`
+                            : "Actualiza tu correo electrónico"}
                     </p>
                 </div>
 
@@ -120,67 +131,57 @@ export function ChangePassword() {
                         placeholder="••••••••••"
                         type="password"
                         icon={Lock01}
-                        value={currentPassword}
+                        value={password}
                         onChange={(value) => {
-                            setCurrentPassword(value);
-                            if (errors.current_password)
+                            setPassword(value);
+                            if (errors.password)
                                 setErrors((prev) => ({
                                     ...prev,
-                                    current_password: undefined,
+                                    password: undefined,
                                 }));
                         }}
                         isRequired
-                        isInvalid={!!errors.current_password}
-                        hint={errors.current_password}
+                        isInvalid={!!errors.password}
+                        hint={errors.password}
                     />
 
                     <Input
-                        label="Nueva contraseña"
-                        placeholder="••••••••••"
-                        type="password"
-                        icon={Lock01}
-                        value={newPassword}
+                        label="Nuevo correo electrónico"
+                        placeholder="tu@correo.com"
+                        type="email"
+                        icon={Mail01}
+                        value={newEmail}
                         onChange={(value) => {
-                            setNewPassword(value);
-                            if (errors.new_password)
+                            setNewEmail(value);
+                            if (errors.new_email)
                                 setErrors((prev) => ({
                                     ...prev,
-                                    new_password: undefined,
+                                    new_email: undefined,
                                 }));
                         }}
                         isRequired
-                        isInvalid={!!errors.new_password}
-                        hint={errors.new_password}
+                        isInvalid={!!errors.new_email}
+                        hint={errors.new_email}
                     />
 
                     <Input
-                        label="Confirmar nueva contraseña"
-                        placeholder="••••••••••"
-                        type="password"
-                        icon={Lock01}
-                        value={confirmPassword}
+                        label="Confirmar nuevo correo"
+                        placeholder="tu@correo.com"
+                        type="email"
+                        icon={Mail01}
+                        value={newEmailConfirm}
                         onChange={(value) => {
-                            setConfirmPassword(value);
-                            if (errors.new_password_confirm)
+                            setNewEmailConfirm(value);
+                            if (errors.new_email_confirm)
                                 setErrors((prev) => ({
                                     ...prev,
-                                    new_password_confirm: undefined,
+                                    new_email_confirm: undefined,
                                 }));
                         }}
                         isRequired
-                        isInvalid={!!errors.new_password_confirm}
-                        hint={errors.new_password_confirm}
+                        isInvalid={!!errors.new_email_confirm}
+                        hint={errors.new_email_confirm}
                     />
-
-                    {/* Success message */}
-                    {showSuccess && (
-                        <div className="flex items-center gap-2 rounded-lg bg-success-50 px-4 py-3">
-                            <CheckCircle className="size-5 text-success-600" />
-                            <p className="text-sm font-medium text-success-700">
-                                Contraseña actualizada correctamente
-                            </p>
-                        </div>
-                    )}
 
                     {/* Spacer to push button to bottom */}
                     <div className="flex-1" />
@@ -196,8 +197,8 @@ export function ChangePassword() {
                             showTextWhileLoading
                         >
                             {isSubmitting
-                                ? "Cambiando..."
-                                : "Cambiar contraseña"}
+                                ? "Actualizando..."
+                                : "Cambiar correo"}
                         </Button>
                     </div>
                 </form>

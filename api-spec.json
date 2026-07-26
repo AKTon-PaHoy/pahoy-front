@@ -675,6 +675,7 @@
           },
           "participants": {
             "type": "array",
+            "description": "UUIDs of User records participating in the room.",
             "items": {
               "type": "string",
               "format": "uuid"
@@ -682,6 +683,7 @@
           },
           "participant_names": {
             "type": "array",
+            "description": "Usernames for the room participants.",
             "items": {
               "type": "string"
             }
@@ -689,7 +691,13 @@
           "last_message": {
             "nullable": true
           },
-          "contract": {
+          "client_user": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "User who created the chat room. Set by trusted server-side creation logic."
+          },
+          "gig": {
             "allOf": [
               {
                 "type": "string",
@@ -711,7 +719,8 @@
           "participants",
           "participant_names",
           "last_message",
-          "contract",
+          "client_user",
+          "gig",
           "is_active",
           "created_at"
         ]
@@ -727,9 +736,16 @@
             "type": "string",
             "format": "uuid"
           },
+          "contract": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Optional Contract associated with the message."
+          },
           "sender": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "UUID of the User who sent the message."
           },
           "sender_username": {
             "type": "string"
@@ -4227,7 +4243,7 @@
           "Chat"
         ],
         "summary": "Send a message to a room",
-        "description": "The sender is derived from the authenticated profile. The room field is still required by MessageSerializer even though room_id is in the URL.",
+        "description": "The sender is derived from the authenticated User. The room field is still required by MessageSerializer even though room_id is in the URL. The optional contract field may be null.",
         "security": [
           {
             "TokenAuth": []
@@ -4254,6 +4270,11 @@
                   "room": {
                     "type": "string",
                     "format": "uuid"
+                  },
+                  "contract": {
+                    "type": "string",
+                    "format": "uuid",
+                    "nullable": true
                   },
                   "content": {
                     "type": "string",

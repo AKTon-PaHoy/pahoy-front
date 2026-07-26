@@ -20,6 +20,7 @@ export function LocationSection({ coordinates, onLocationUpdated }: LocationSect
   const [error, setError] = useState<string | null>(null);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [mapConfirmError, setMapConfirmError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Determine what to display: address, loading, placeholder, or fallback
   let displayText: string | null = null;
@@ -68,11 +69,12 @@ export function LocationSection({ coordinates, onLocationUpdated }: LocationSect
           body: { latitude, longitude },
         });
 
-        // Extract new coordinates from GeoJSON response
         const newCoords = fromGeoJSON(response.location);
         if (newCoords) {
           onLocationUpdated(newCoords);
           setError(null);
+          setShowSuccess(true);
+          setTimeout(() => setShowSuccess(false), 3000);
         }
       } catch (err) {
         // Handle API errors
@@ -138,6 +140,8 @@ export function LocationSection({ coordinates, onLocationUpdated }: LocationSect
         onLocationUpdated(newCoords);
         setError(null);
         setMapConfirmError(null);
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
       }
     } catch (err) {
       if (err instanceof ApiError) {
@@ -280,6 +284,13 @@ export function LocationSection({ coordinates, onLocationUpdated }: LocationSect
         {(error || mapConfirmError) && (
           <p className="text-sm text-error-primary">
             {mapConfirmError || error}
+          </p>
+        )}
+
+        {/* Success Message */}
+        {showSuccess && (
+          <p className="text-sm text-success-primary">
+            Ubicación actualizada correctamente
           </p>
         )}
       </div>

@@ -167,9 +167,10 @@ export function ChatList() {
         {!isLoading && rooms.length > 0 && (
           <div className="divide-y divide-neutral-200">
             {rooms.map((room) => {
+              // Use resolveOtherParticipant if currentUser is available, otherwise use first available name
               const otherParticipantName = currentUser
                 ? resolveOtherParticipant(room, currentUser.id)
-                : "Usuario";
+                : room.participant_names[0] || "Usuario";
 
               const gigName = room.gig ? gigNames[room.gig] : undefined;
 

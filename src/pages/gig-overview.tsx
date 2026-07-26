@@ -371,7 +371,7 @@ export function GigOverview() {
             </motion.div>
 
             {/* Fixed Bottom CTA - Always visible */}
-            <div className="fixed inset-x-0 bottom-0 z-20 bg-white px-4 pt-3 pb-safe">
+            <div className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-[750px] bg-white px-4 pt-3 pb-safe">
                 <div className="pb-4">
                     <button
                         onClick={() => {

@@ -13,6 +13,8 @@ const mockContract: Contract = {
   id: "contract-123",
   gig: "Test Gig: Reparación de aires y neveras",
   client: "client-uuid",
+  client_username: "client_user",
+  talent_username: "talent_user",
   status: "Activo",
   price: 18,
   price_type: "Horas",

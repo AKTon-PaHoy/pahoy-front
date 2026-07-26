@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { api, ApiError } from "@/utils/api";
-import type {
-  Contract,
-  ContractListItem,
-  PaginatedResponse,
-} from "@/types/chat";
+import type { Contract, ContractListItem, PaginatedResponse } from "@/types/chat";
 
 export interface UseContractsListReturn {
   contracts: ContractListItem[];

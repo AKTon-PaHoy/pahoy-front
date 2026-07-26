@@ -119,96 +119,98 @@ export function ContractProposalModal({ isOpen, onClose, onSuccess, roomId, gig 
     return (
         <ModalOverlay isOpen={isOpen} onOpenChange={(open) => !open && onClose()} isDismissable={!isSubmitting}>
             <Modal className="max-w-md">
-                <Dialog className="flex-col p-6">
-                    {/* Header */}
-                    <h2 className="text-lg font-semibold text-primary">Enviar propuesta de contrato</h2>
-                    <p className="mt-1 text-sm text-tertiary">Confirma los detalles del contrato antes de enviar.</p>
+                <Dialog>
+                    <div className="flex w-full max-w-md flex-col rounded-xl bg-white p-6">
+                        {/* Header */}
+                        <h2 className="text-lg font-semibold text-primary">Enviar propuesta de contrato</h2>
+                        <p className="mt-1 text-sm text-tertiary">Confirma los detalles del contrato antes de enviar.</p>
 
-                    {/* Form */}
-                    <div className="mt-5 flex flex-col gap-4">
-                        {/* Gig name (read-only) */}
-                        <Input
-                            label="Servicio"
-                            value={gig.name}
-                            isDisabled
-                            isReadOnly
-                            placeholder="Nombre del servicio"
-                        />
+                        {/* Form */}
+                        <div className="mt-5 flex flex-col gap-4">
+                            {/* Gig name (read-only) */}
+                            <Input
+                                label="Servicio"
+                                value={gig.name}
+                                isDisabled
+                                isReadOnly
+                                placeholder="Nombre del servicio"
+                            />
 
-                        {/* Price */}
-                        <Input
-                            label="Precio"
-                            placeholder="0.00"
-                            value={price}
-                            onChange={handlePriceChange}
-                            isDisabled={isSubmitting}
-                            isInvalid={!!errors.price}
-                            hint={errors.price}
-                            isRequired
-                            type="text"
-                            inputMode="decimal"
-                        />
+                            {/* Price */}
+                            <Input
+                                label="Precio"
+                                placeholder="0.00"
+                                value={price}
+                                onChange={handlePriceChange}
+                                isDisabled={isSubmitting}
+                                isInvalid={!!errors.price}
+                                hint={errors.price}
+                                isRequired
+                                type="text"
+                                inputMode="decimal"
+                            />
 
-                        {/* Price type radio group */}
-                        <div className="flex flex-col gap-1.5">
-                            <span className="text-sm font-medium text-secondary">Tipo de precio</span>
-                            <div className="flex gap-2">
-                                <button
-                                    type="button"
-                                    disabled={isSubmitting}
-                                    onClick={() => setPriceType("Fijo")}
-                                    className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
-                                        priceType === "Fijo"
-                                            ? "bg-brand-solid text-white shadow-xs"
-                                            : "bg-primary text-secondary ring-1 ring-primary ring-inset hover:bg-primary_hover"
-                                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                                >
-                                    Fijo
-                                </button>
-                                <button
-                                    type="button"
-                                    disabled={isSubmitting}
-                                    onClick={() => setPriceType("Horas")}
-                                    className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
-                                        priceType === "Horas"
-                                            ? "bg-brand-solid text-white shadow-xs"
-                                            : "bg-primary text-secondary ring-1 ring-primary ring-inset hover:bg-primary_hover"
-                                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                                >
-                                    Horas
-                                </button>
+                            {/* Price type radio group */}
+                            <div className="flex flex-col gap-1.5">
+                                <span className="text-sm font-medium text-secondary">Tipo de precio</span>
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        disabled={isSubmitting}
+                                        onClick={() => setPriceType("Fijo")}
+                                        className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+                                            priceType === "Fijo"
+                                                ? "bg-brand-solid text-white shadow-xs"
+                                                : "bg-primary text-secondary ring-1 ring-primary ring-inset hover:bg-primary_hover"
+                                        } disabled:cursor-not-allowed disabled:opacity-50`}
+                                    >
+                                        Fijo
+                                    </button>
+                                    <button
+                                        type="button"
+                                        disabled={isSubmitting}
+                                        onClick={() => setPriceType("Horas")}
+                                        className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+                                            priceType === "Horas"
+                                                ? "bg-brand-solid text-white shadow-xs"
+                                                : "bg-primary text-secondary ring-1 ring-primary ring-inset hover:bg-primary_hover"
+                                        } disabled:cursor-not-allowed disabled:opacity-50`}
+                                    >
+                                        Horas
+                                    </button>
+                                </div>
+                                {errors.price_type && <span className="text-sm text-error-primary">{errors.price_type}</span>}
                             </div>
-                            {errors.price_type && <span className="text-sm text-error-primary">{errors.price_type}</span>}
+
+                            {/* General error */}
+                            {errors._general && <p className="text-sm text-error-primary">{errors._general}</p>}
                         </div>
 
-                        {/* General error */}
-                        {errors._general && <p className="text-sm text-error-primary">{errors._general}</p>}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="mt-6 flex flex-col gap-3">
-                        <Button
-                            type="button"
-                            color="primary"
-                            size="xl"
-                            className="w-full"
-                            isLoading={isSubmitting}
-                            showTextWhileLoading
-                            isDisabled={isSubmitting}
-                            onClick={handleConfirm}
-                        >
-                            {isSubmitting ? "Enviando..." : "Enviar contrato"}
-                        </Button>
-                        <Button
-                            type="button"
-                            color="tertiary"
-                            size="xl"
-                            className="w-full"
-                            isDisabled={isSubmitting}
-                            onClick={onClose}
-                        >
-                            Cancelar
-                        </Button>
+                        {/* Actions */}
+                        <div className="mt-6 flex flex-col gap-3">
+                            <Button
+                                type="button"
+                                color="primary"
+                                size="xl"
+                                className="w-full"
+                                isLoading={isSubmitting}
+                                showTextWhileLoading
+                                isDisabled={isSubmitting}
+                                onClick={handleConfirm}
+                            >
+                                {isSubmitting ? "Enviando..." : "Enviar contrato"}
+                            </Button>
+                            <Button
+                                type="button"
+                                color="tertiary"
+                                size="xl"
+                                className="w-full"
+                                isDisabled={isSubmitting}
+                                onClick={onClose}
+                            >
+                                Cancelar
+                            </Button>
+                        </div>
                     </div>
                 </Dialog>
             </Modal>

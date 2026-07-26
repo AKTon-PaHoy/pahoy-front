@@ -26,14 +26,6 @@ import { api } from "@/utils/api";
 import { clearToken } from "@/utils/auth";
 import { fromGeoJSON } from "@/utils/coordinates";
 
-interface GigListItem {
-    id: number;
-    name: string;
-    front_image: string | null;
-    price: string;
-    status: string;
-}
-
 export function Profile() {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
@@ -45,7 +37,7 @@ export function Profile() {
     const [fetchError, setFetchError] = useState<string | null>(null);
 
     // Gigs state (independent loading)
-    const [gigs, setGigs] = useState<GigListItem[]>([]);
+    const [gigCount, setGigCount] = useState<number>(0);
     const [gigsLoading, setGigsLoading] = useState(true);
     const [gigsError, setGigsError] = useState<string | null>(null);
 
@@ -91,8 +83,8 @@ export function Profile() {
         setGigsLoading(true);
         setGigsError(null);
         try {
-            const data = await api<{ count: number; results: GigListItem[] }>("/api/gigs/my-gigs/");
-            setGigs(data.results);
+            const data = await api<{ count: number }>("/api/gigs/my-gigs/");
+            setGigCount(data.count);
         } catch {
             setGigsError("No pudimos cargar tus chambas");
         } finally {
@@ -130,8 +122,6 @@ export function Profile() {
             setIsDeleting(false);
         }
     };
-
-    const visibleCount = gigs.filter((g) => g.status === "visible").length;
 
     const { address: fullAddress } = useReverseGeocode(userCoordinates);
 
@@ -259,7 +249,7 @@ export function Profile() {
                                 ? "Cargando..."
                                 : gigsError
                                   ? "Error al cargar"
-                                  : `${gigs.length} publicadas · ${visibleCount} visibles`}
+                                  : `${gigCount} publicadas`}
                         </p>
                     </div>
                     <ChevronRight className="size-5 text-neutral-400" />

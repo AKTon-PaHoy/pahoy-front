@@ -106,9 +106,11 @@ function ContractItem({
                 ) : (
                     <CheckCircle className="size-5 text-neutral-500" />
                 )}
-                <span className="text-sm font-bold text-brand-600">
-                    {formatPrice(contract.price)}
-                </span>
+                {contract.price !== null && (
+                    <span className="text-sm font-bold text-brand-600">
+                        {formatPrice(contract.price)}
+                    </span>
+                )}
             </div>
         </button>
     );

@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "PaHoy API",
-    "version": "1.3.0",
+    "version": "1.6.0",
     "description": "API contract generated from the currently routed Django REST Framework endpoints. The URL configuration, views, serializers, and models are the source of truth. Protected API operations use DRF TokenAuthentication. Collection endpoints use DRF page-number pagination with a default page size of 20. Blog, KYC, knowledge, support, billing, and payment models exist or are planned, but no public API routes for them are currently exposed."
   },
   "servers": [
@@ -540,6 +540,16 @@
             ],
             "nullable": true
           },
+          "client_username": {
+            "type": "string",
+            "nullable": true,
+            "description": "Username of the assigned client, or null if no client yet."
+          },
+          "talent_username": {
+            "type": "string",
+            "nullable": true,
+            "description": "Username of the gig talent, or null if the gig relationship is missing."
+          },
           "status": {
             "type": "string",
             "enum": [
@@ -1005,7 +1015,7 @@
           "results": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Contract"
+              "$ref": "#/components/schemas/ContractListItem"
             }
           }
         },
@@ -1014,6 +1024,105 @@
           "next",
           "previous",
           "results"
+        ]
+      },
+      "ContractListItem": {
+        "type": "object",
+        "description": "Contract object returned in list responses, enriched with gig display info and counterparty details relative to the requester.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "gig": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client": {
+            "allOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              }
+            ],
+            "nullable": true
+          },
+          "client_username": {
+            "type": "string",
+            "nullable": true
+          },
+          "talent_username": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Activo",
+              "Concluido",
+              "Confirmado",
+              "Disputa",
+              "Cancelado",
+              "Propuesta"
+            ]
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "Fijo",
+              "Horas"
+            ]
+          },
+          "gig_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the gig associated with the contract."
+          },
+          "gig_front_image": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "URL of the gig's front image for card thumbnails."
+          },
+          "counterparty_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Username of the other participant. If the requester is the client, this is the talent; if the requester is the talent, this is the client."
+          },
+          "counterparty_verified": {
+            "type": "boolean",
+            "description": "Whether the counterparty's profile is KYC-verified."
+          },
+          "counterparty_profile_pic": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "Profile picture URL of the counterparty."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "gig",
+          "status",
+          "price_type",
+          "gig_name",
+          "counterparty_name",
+          "counterparty_verified",
+          "created_at",
+          "updated_at"
         ]
       },
       "PaginatedReviewList": {
@@ -1036,7 +1145,7 @@
           "results": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Review"
+              "$ref": "#/components/schemas/ReviewList"
             }
           }
         },
@@ -3209,6 +3318,7 @@
           "Contracts"
         ],
         "summary": "List contracts involving the authenticated user",
+        "description": "Returns contracts where the authenticated user is the assigned client, the gig talent, or a participant in a ChatRoom associated with the contract's gig. This allows both parties to see contract proposals before formal acceptance.",
         "security": [
           {
             "TokenAuth": []
@@ -3336,7 +3446,8 @@
         "tags": [
           "Contracts"
         ],
-        "summary": "Retrieve an owned contract",
+        "summary": "Retrieve a contract",
+        "description": "Accessible by the assigned client, the gig talent, or any participant in a ChatRoom associated with the contract's gig. Returns 404 if the contract does not exist or the user has no access.",
         "security": [
           {
             "TokenAuth": []
@@ -3590,7 +3701,8 @@
         "tags": [
           "Contracts"
         ],
-        "summary": "Delete an owned contract",
+        "summary": "Delete a contract",
+        "description": "Accessible by the assigned client, the gig talent, or any participant in a ChatRoom associated with the contract's gig. Returns 404 if the contract does not exist or the user has no access.",
         "security": [
           {
             "TokenAuth": []

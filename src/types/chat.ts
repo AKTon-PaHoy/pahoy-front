@@ -25,8 +25,10 @@ export interface Contract {
   id: string;
   gig: string;
   client: string;
+  client_username: string | null;
+  talent_username: string | null;
   status: "Activo" | "Concluido" | "Confirmado" | "Disputa" | "Cancelado" | "Propuesta";
-  price: number;
+  price: number | null;
   price_type: string;
   created_at: string;
   updated_at: string;
@@ -44,6 +46,7 @@ export interface ContractListItem extends Contract {
   gig_front_image: string | null;
   counterparty_name: string;
   counterparty_verified: boolean;
+  counterparty_profile_pic: string | null;
 }
 
 export interface GigDetail {

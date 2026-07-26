@@ -4,6 +4,7 @@ import { AnimatePresence } from "motion/react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router";
 import { BottomNavigation } from "@/components/application/bottom-navigation/bottom-navigation";
 import { PageTransition } from "@/components/application/page-transition/page-transition";
+import { ChambasScreen } from "@/pages/chambas-screen";
 import { CompleteProfile } from "@/pages/complete-profile";
 import { GigOverview } from "@/pages/gig-overview";
 import { HomeScreen } from "@/pages/home-screen";
@@ -88,6 +89,7 @@ function AnimatedRoutes() {
                     <Route path="/search" element={<RequireAuth><RequireOnboarding><PageTransition><Search /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/gig/:id" element={<RequireAuth><RequireOnboarding><PageTransition><GigOverview /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/complete-profile" element={<RequireAuth><PageTransition><CompleteProfile /></PageTransition></RequireAuth>} />
+                    <Route path="/gigs" element={<RequireAuth><RequireOnboarding><PageTransition><ChambasScreen /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile" element={<RequireAuth><RequireOnboarding><PageTransition><Profile /></PageTransition></RequireOnboarding></RequireAuth>} />
                     <Route path="/profile/change-password" element={<RequireAuth><PageTransition><ChangePassword /></PageTransition></RequireAuth>} />
                     <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />

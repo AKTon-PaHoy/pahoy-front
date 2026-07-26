@@ -40,7 +40,19 @@ export const HomeScreen = () => {
     const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
     const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
 
-    const { address } = useReverseGeocode(coordinates);
+    const { address: fullAddress } = useReverseGeocode(coordinates);
+
+    // Show a compact location: skip the street (index 0), pick 2 distinct segments
+    const shortAddress = (() => {
+        if (!fullAddress) return null;
+        const parts = fullAddress.split(",").map(s => s.trim());
+        // Skip the first part (street name), then pick 2 non-redundant segments
+        const candidates = parts.slice(1).filter((part, i, arr) => {
+            // Remove parts that are substrings of an earlier part (e.g. "La California Norte" vs "Sector La California Norte")
+            return !arr.slice(0, i).some(prev => prev.includes(part) || part.includes(prev));
+        });
+        return candidates.slice(0, 2).join(", ") || parts.slice(0, 2).join(", ");
+    })();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -78,7 +90,7 @@ export const HomeScreen = () => {
                         </h1>
                         <div className="mt-1 flex items-center gap-1 text-sm text-tertiary">
                             <MarkerPin01 className="size-4" />
-                            <span>{address || "Obteniendo ubicación..."}</span>
+                            <span>{shortAddress || "Obteniendo ubicación..."}</span>
                         </div>
                     </div>
                     {/* Avatar — navigates to profile */}

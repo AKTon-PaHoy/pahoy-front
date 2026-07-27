@@ -1,56 +1,67 @@
-# Untitled UI starter kit for Vite
+# Pa·Hoy — Talento local, pa' hoy mismo
 
-This is an official Untitled UI starter kit for Vite. Kickstart your Untitled UI project with Vite in seconds.
+Pa·Hoy is a mobile-first platform that connects local talent with clients who need services and products delivered in person. It enables entrepreneurs and independent workers to monetize their skills by prioritizing geographic proximity for service matching.
 
-## Untitled UI React
+## Tech Stack
 
-[Untitled UI React](https://www.untitledui.com/react) is the world’s largest collection of open-source React UI components. Everything you need to design and develop modern, beautiful interfaces—fast.
+- **React 19** + **TypeScript 5.9** — UI framework with strict typing
+- **Vite 8** — Fast dev server and bundler
+- **Tailwind CSS 4** — Utility-first styling with custom design tokens
+- **React Aria Components** — Accessible, unstyled component primitives
+- **React Router 7** — Client-side routing
+- **Motion (Framer Motion)** — Page transitions and animations
+- **Leaflet + React Leaflet** — Interactive maps for location selection
+- **Recharts** — Data charts
 
-Built with React 19.1, Tailwind CSS v4.1, TypeScript 5.8, and React Aria, Untitled UI React components deliver modern performance, type safety, and maintainability.
-
-[Learn more](https://www.untitledui.com/react) • [Documentation](https://www.untitledui.com/react/docs/introduction) • [Figma](https://www.untitledui.com/figma) • [FAQs](https://www.untitledui.com/faqs)
-
-## Getting started
-
-First, run the development server:
+## Getting Started
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-You can start editing the app by modifying the components in `src/` folder. The page auto-updates as you edit the file.
+## Scripts
 
-## Resources
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | TypeScript check + production build |
+| `npm run preview` | Preview production build locally |
+| `npm run test` | Run tests (Vitest, single run) |
 
-Untitled UI React is built on top of [Untitled UI Figma](https://www.untitledui.com/figma), the world's largest and most popular Figma UI kit and design system. Explore more:
+## Project Structure
 
-**[Untitled UI Figma:](https://www.untitledui.com/react/resources/figma-files)** The world's largest Figma UI kit and design system.
-<br/>
-**[Untitled UI Icons:](https://www.untitledui.com/react/resources/icons)** A clean, consistent, and neutral icon library crafted specifically for modern UI design.
-<br/>
-**[Untitled UI file icons:](https://www.untitledui.com/react/resources/file-icons)** Free file format icons, designed specifically for modern web and UI design.
-<br/>
-**[Untitled UI flag icons:](https://www.untitledui.com/react/resources/flag-icons)** Free country flag icons, designed specifically for modern web and UI design.
-<br/>
-**[Untitled UI avatars:](https://www.untitledui.com/react/resources/avatars)** Free placeholder user avatars and profile pictures to use in your projects.
-<br/>
-**[Untitled UI logos:](https://www.untitledui.com/react/resources/logos)** Free fictional company logos to use in your projects.
+```
+src/
+├── components/
+│   ├── base/            # Core UI (Button, Input, Select, etc.)
+│   └── application/     # Feature components (modals, navigation, maps, chat)
+├── hooks/               # Custom React hooks
+├── pages/               # Route-level page components
+├── providers/           # Context providers (theme, router)
+├── styles/              # Global CSS, theme tokens, typography
+├── types/               # TypeScript type definitions
+├── utils/               # Utilities (API client, auth, coordinates)
+└── main.tsx             # App entry point + route definitions
+```
 
-## License
+## Key Features
 
-Untitled UI React open-source components are licensed under the MIT license, which means you can use them for free in unlimited commercial projects.
+- User registration and login (JWT auth)
+- Service ("gig") listing, search with distance filter, and detail view
+- Gig creation and editing with image upload
+- Location selection via interactive Leaflet map
+- Real-time chat between talent and clients
+- Contract proposal and management lifecycle
+- Profile completion with geolocation and reverse geocoding
+- Bottom tab navigation (Home, Search, Chambas, Messages, Profile)
 
-> [!NOTE]
-> This license applies only to the starter kit and to the components included in this open-source repository. [Untitled UI React PRO](https://www.untitledui.com/react) includes hundreds more advanced UI components and page examples and is subject to a separate [license agreement](https://www.untitledui.com/license).
+## Design
 
-[Untitled UI license agreement →](https://www.untitledui.com/license)
-
-[Frequently asked questions →](https://www.untitledui.com/faqs)
+All UI/UX decisions follow the Figma design system:
+https://www.figma.com/design/21azV7Zha4GR2qbyTrCOBk/Pa--Hoy---App-Design

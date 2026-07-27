@@ -7,9 +7,19 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "preview": "vite preview",
-        "test": "vitest --run"
+        "test": "vitest --run",
+        "cap:sync": "npx cap sync",
+        "cap:open": "npx cap open android",
+        "cap:build": "npm run build && npx cap sync && cd android && ./gradlew assembleDebug",
+        "clean:capacitor": "rm -rf android/app/build android/build android/capacitor-cordova-android-plugins/build"
     },
     "dependencies": {
+        "@capacitor/android": "^8.4.2",
+        "@capacitor/app": "^8.1.1",
+        "@capacitor/browser": "^8.0.4",
+        "@capacitor/core": "^8.4.2",
+        "@capacitor/splash-screen": "^8.0.2",
+        "@capacitor/status-bar": "^8.0.3",
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.2.2",
         "@untitledui/file-icons": "^0.0.9",
@@ -33,6 +43,8 @@
         "tailwindcss-react-aria-components": "^2.0.1"
     },
     "devDependencies": {
+        "@capacitor/assets": "^3.0.5",
+        "@capacitor/cli": "^8.4.2",
         "@testing-library/jest-dom": "^7.0.0",
         "@testing-library/react": "^16.3.2",
         "@trivago/prettier-plugin-sort-imports": "^6.0.2",

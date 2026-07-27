@@ -1,0 +1,423 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Install Capacitor core packages and plugins": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132090
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110142654
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110264478
+      }
+    ],
+    "1.2 Create `capacitor.config.ts` at project root": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132124
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110268881
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110325152
+      }
+    ],
+    "1.3 Update `vite.config.ts` to set `base: \"./\"`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132190
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110269688
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110325843
+      }
+    ],
+    "1.4 Update `index.html` viewport meta tag": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132218
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110270501
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110326602
+      }
+    ],
+    "2.1 Initialize the Android platform": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132243
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110331437
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110430587
+      }
+    ],
+    "2.2 Configure Android SDK versions and Java in `android/variables.gradle`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132269
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110436491
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110537870
+      }
+    ],
+    "2.3 Set app label in `android/app/src/main/res/values/strings.xml`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132296
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110437302
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110538628
+      }
+    ],
+    "2.4 Configure navigation bar styling in `android/app/src/main/res/values/styles.xml`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132324
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110438123
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110539473
+      }
+    ],
+    "3. Checkpoint - Verify base Capacitor setup": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132352
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110662674
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110770033
+      }
+    ],
+    "4.1 Create `src/utils/capacitor.ts` with platform detection and initialization": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132380
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110332229
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110429865
+      }
+    ],
+    "4.2 Implement deep link listener in `src/utils/capacitor.ts`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132407
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110438949
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110540266
+      }
+    ],
+    "4.3 Implement external URL handler in `src/utils/capacitor.ts`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132437
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110439749
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110541043
+      }
+    ],
+    "5.1 Wire `initializeNativeApp()` into `src/main.tsx`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132465
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110550665
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110639775
+      }
+    ],
+    "5.2 Wire deep link listener with auth-aware navigation in `src/main.tsx`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132503
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110783077
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111354964
+      }
+    ],
+    "6.1 Add App Links intent filters to `AndroidManifest.xml`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132544
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110551328
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110639693
+      }
+    ],
+    "7.1 Generate Android adaptive icon assets": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132572
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110783782
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111355449
+      }
+    ],
+    "7.2 Generate splash screen assets": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132598
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110784492
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111355467
+      }
+    ],
+    "8.1 Add Capacitor npm scripts": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132638
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111367136
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111407079
+      }
+    ],
+    "9. Checkpoint - Full build verification": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132667
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111415615
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111560931
+      }
+    ],
+    "10.2 Run `npx cap sync` and verify assets are copied": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132696
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111415773
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111561461
+      }
+    ],
+    "11. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110132724
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111567231
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111652452
+      }
+    ],
+    "1. Install Capacitor dependencies and create configuration": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110326628
+      }
+    ],
+    "2. Generate Android project and configure native settings": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110539502
+      }
+    ],
+    "4. Create native initialization module and deep link handler": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110541071
+      }
+    ],
+    "6. Configure Android deep link intent filters": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785110639719
+      }
+    ],
+    "5. Integrate deep links and native init into the app": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111355000
+      }
+    ],
+    "8. Add npm build scripts to `package.json`": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111407133
+      }
+    ],
+    "10. End-to-end build pipeline validation": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111561511
+      }
+    ],
+    "7. Generate app icons and splash screen assets": [
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111673217
+      },
+      {
+        "executionId": "02fb3f2a-68f0-4037-8989-f243c99f0017",
+        "chatSessionId": "sess_58e93e1f-d57d-4e07-a21b-59830ec2b72b",
+        "timestamp": 1785111679056
+      }
+    ]
+  }
+}

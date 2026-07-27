@@ -18,12 +18,24 @@ interface Gig {
     updated_at: string;
 }
 
+const DISTANCE_OPTIONS = [
+    { label: "5 km", value: "5" },
+    { label: "10 km", value: "10" },
+    { label: "25 km", value: "25" },
+    { label: "50 km", value: "50" },
+    { label: "100 km", value: "100" },
+];
+
+const DEFAULT_DISTANCE = "10";
+
 export function Search() {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const initialQuery = searchParams.get("q") || "";
+    const initialDistance = searchParams.get("distance") || DEFAULT_DISTANCE;
 
     const [query, setQuery] = useState(initialQuery);
+    const [distance, setDistance] = useState(initialDistance);
     const [results, setResults] = useState<Gig[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
@@ -32,16 +44,19 @@ export function Search() {
     const manualSearchRef = useRef(false);
 
     const performSearch = useCallback(
-        async (searchText: string) => {
+        async (searchText: string, dist: string) => {
             setIsLoading(true);
             setHasSearched(true);
 
             try {
-                const params = searchText.trim()
-                    ? `?search=${encodeURIComponent(searchText.trim())}`
-                    : "";
+                const params = new URLSearchParams();
+                if (searchText.trim()) {
+                    params.set("search", searchText.trim());
+                }
+                params.set("distance", dist);
+                const queryString = params.toString() ? `?${params.toString()}` : "";
                 const response = await api<{ results: Gig[] }>(
-                    `/api/gigs/search/${params}`,
+                    `/api/gigs/search/${queryString}`,
                 );
                 setResults(response.results);
             } catch {
@@ -56,7 +71,7 @@ export function Search() {
     // Search on mount if query param exists (including empty string from "Ver todo")
     useEffect(() => {
         if (searchParams.has("q")) {
-            performSearch(initialQuery);
+            performSearch(initialQuery, initialDistance);
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -80,8 +95,8 @@ export function Search() {
 
         if (query.trim() && query !== initialQuery) {
             debounceRef.current = setTimeout(() => {
-                setSearchParams({ q: query.trim() });
-                performSearch(query);
+                setSearchParams({ q: query.trim(), distance });
+                performSearch(query, distance);
             }, 3000);
         }
 
@@ -92,14 +107,22 @@ export function Search() {
         };
     }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    // Re-search when distance changes (if we already have a search)
+    useEffect(() => {
+        if (hasSearched) {
+            setSearchParams({ q: query.trim(), distance });
+            performSearch(query, distance);
+        }
+    }, [distance]); // eslint-disable-line react-hooks/exhaustive-deps
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         manualSearchRef.current = true;
         if (debounceRef.current) {
             clearTimeout(debounceRef.current);
         }
-        setSearchParams({ q: query.trim() });
-        performSearch(query);
+        setSearchParams({ q: query.trim(), distance });
+        performSearch(query, distance);
     };
 
     return (
@@ -134,6 +157,27 @@ export function Search() {
                         />
                     </div>
                 </form>
+
+                {/* Distance filter */}
+                <div className="mt-2 flex items-center gap-2 pl-12">
+                    <span className="text-xs font-medium text-tertiary">Distancia:</span>
+                    <div className="flex gap-1.5">
+                        {DISTANCE_OPTIONS.map((option) => (
+                            <button
+                                key={option.value}
+                                type="button"
+                                onClick={() => setDistance(option.value)}
+                                className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    distance === option.value
+                                        ? "bg-brand-600 text-white"
+                                        : "bg-neutral-100 text-tertiary hover:bg-neutral-200"
+                                }`}
+                            >
+                                {option.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </header>
 
             {/* Results */}
@@ -157,7 +201,7 @@ export function Search() {
                             No encontramos resultados
                         </p>
                         <p className="mt-1 text-xs text-tertiary">
-                            Intenta con otra búsqueda
+                            Intenta con otra búsqueda o aumenta la distancia
                         </p>
                     </div>
                 )}

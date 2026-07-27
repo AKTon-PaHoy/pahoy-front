@@ -2,7 +2,7 @@ import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { registerSW } from "virtual:pwa-register";
 import { AnimatePresence } from "motion/react";
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from "react-router";
 import { BottomNavigation } from "@/components/application/bottom-navigation/bottom-navigation";
 import { PageTransition } from "@/components/application/page-transition/page-transition";
 import { ChambasScreen } from "@/pages/chambas-screen";
@@ -30,6 +30,7 @@ import { RouteProvider } from "@/providers/router-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { api, validateToken } from "@/utils/api";
 import { getToken } from "@/utils/auth";
+import { initializeNativeApp, setupDeepLinkListener } from "@/utils/capacitor";
 import "@/styles/globals.css";
 
 const NAV_ROUTES = ["/home", "/search", "/contracts", "/messages", "/profile", "/gigs"];
@@ -57,7 +58,14 @@ function SplashGuard() {
     }, []);
 
     if (checking) return null;
-    if (isValid) return <Navigate to="/home" replace />;
+    if (isValid) {
+        const deepLinkTarget = sessionStorage.getItem("deepLinkTarget");
+        if (deepLinkTarget) {
+            sessionStorage.removeItem("deepLinkTarget");
+            return <Navigate to={deepLinkTarget} replace />;
+        }
+        return <Navigate to="/home" replace />;
+    }
     return <PageTransition><Splash /></PageTransition>;
 }
 
@@ -93,7 +101,23 @@ function RequireOnboarding({ children }: { children: React.ReactNode }) {
 
 function AnimatedRoutes() {
     const location = useLocation();
+    const navigate = useNavigate();
     const showNav = NAV_ROUTES.some((r) => location.pathname.startsWith(r)) && !shouldHideNav(location.pathname);
+
+    useEffect(() => {
+        initializeNativeApp();
+    }, []);
+
+    useEffect(() => {
+        setupDeepLinkListener((path) => {
+            if (!getToken()) {
+                sessionStorage.setItem("deepLinkTarget", path);
+                navigate("/login", { replace: true });
+            } else {
+                navigate(path, { replace: true });
+            }
+        });
+    }, [navigate]);
 
     return (
         <>

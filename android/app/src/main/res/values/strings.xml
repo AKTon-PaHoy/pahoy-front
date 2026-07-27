@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pa·Hoy</string>
+    <string name="title_activity_main">Pa·Hoy</string>
+    <string name="package_name">com.pahoy.app</string>
+    <string name="custom_url_scheme">com.pahoy.app</string>
+</resources>

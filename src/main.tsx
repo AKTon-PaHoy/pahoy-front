@@ -156,7 +156,7 @@ createRoot(document.getElementById("root")!).render(
             <BrowserRouter>
                 <RouteProvider>
                     <OfflineIndicator />
-                    <div className="mx-auto max-w-[750px]">
+                    <div className="mx-auto max-w-[750px] pt-safe">
                         <AnimatedRoutes />
                     </div>
                 </RouteProvider>

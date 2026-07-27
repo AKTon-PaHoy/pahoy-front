@@ -10,9 +10,15 @@ export function isNative(): boolean {
 export async function initializeNativeApp(): Promise<void> {
     if (!isNative()) return;
 
-    // Configure status bar: white bg with dark icons
+    // Configure status bar: overlay mode for edge-to-edge rendering.
+    // On Android 15+ this is enforced by the system, so we wrap in try/catch.
+    try {
+        await StatusBar.setOverlaysWebView({ overlay: true });
+    } catch {
+        // Already edge-to-edge on Android 15+
+    }
     await StatusBar.setStyle({ style: Style.Light });
-    await StatusBar.setBackgroundColor({ color: "#FFFFFF" });
+    await StatusBar.setBackgroundColor({ color: "#00FFFFFF" });
 }
 
 export function setupDeepLinkListener(navigate: (path: string) => void): void {

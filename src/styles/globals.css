@@ -22,6 +22,14 @@
     scrollbar-width: none; /* Firefox */
 }
 
+@utility pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+}
+
+@utility pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 @utility transition-inherit-all {
     transition-property: inherit;
     transition-duration: inherit;
